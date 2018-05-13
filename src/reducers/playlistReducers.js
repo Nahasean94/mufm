@@ -8,18 +8,12 @@ export default (state = [], action) => {
         case CLEAR_FILES:
             return []
         case UPDATE_FILE:
+                console.log("updating fied")
             return state.filter(file => {
                 if (file.id === action.payload.id) {
                     return file
                 }
-
             })
-        case GET_FILE:
-            const fileIndex = findIndex(state, {id: action.payload.id})
-            if (fileIndex >= 0) {
-                return new Array(state[fileIndex])
-            }
-            return state
         case DELETE_FILE:
             const index = findIndex(state, {id: action.payload.id})
             if (index >= 0) {

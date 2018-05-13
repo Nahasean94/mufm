@@ -29,19 +29,20 @@ class AddMediaFiles extends React.Component {
     }
 
     onDrop(acceptedFiles) {
+        let id=this.props.files.length+1
         for (let i = 0; i < acceptedFiles.length; i++) {
             const audio = new Audio()
             audio.src = acceptedFiles[i].path
-            audio.onloadedmetadata = () => {
+            audio.addEventListener('loadedmetadata', () => {
                 const duration = this.secondsToHms(audio.duration)
                 this.props.addFile({
-                    id:i+1,
+                    id:id++,
                     name: acceptedFiles[i].name,
                     path: acceptedFiles[i].path,
                     duration: duration,
                     played:false
                 })
-            }
+            })
             // );
 
             //     const reader = new FileReader()
@@ -90,5 +91,8 @@ AddMediaFiles.propTypes = {
     show: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
 }
+function mapStateToProps(state) {
+    return {files: state.playlistReducers}
+}
 
-export default connect(null, {addFile})(AddMediaFiles)
+export default connect(mapStateToProps, {addFile})(AddMediaFiles)

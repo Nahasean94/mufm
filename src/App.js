@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import AddMediaFiles from './components/modals/AddMediaFiles'
-import {renderAudioPlayer} from "./Player"
+import Player from "./Player"
 import PlayList from "./components/playlist/PlayList"
 
 
@@ -74,7 +74,7 @@ class App extends Component {
                             </div>
                             <canvas id="analyser_render"
                             >
-                                {renderAudioPlayer()}
+                                {Player.renderAudioPlayer()}
                             </canvas>
                         </div>
                     </div>
