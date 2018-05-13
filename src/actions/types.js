@@ -1,0 +1,5 @@
+export const ADD_FILE='ADD_FILE'
+export const CLEAR_FILES='CLEAR_FILES'
+export const UPDATE_FILE='UPDATE_FILE'
+export const DELETE_FILE='DELETE_FILE'
+export const GET_FILE='GET_FILE'
