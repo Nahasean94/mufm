@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import AddMediaFiles from './components/modals/AddMediaFiles'
 import Player from "./Player"
 import PlayList from "./components/playlist/PlayList"
+import PlaylistDate from "./components/PlaylistDate"
 
 
 class App extends Component {
@@ -50,14 +51,16 @@ class App extends Component {
     }
 
 
-
     render() {
         const {showUploadMediaModal} = this.state
         return (
             <div className="container-fluid">
                 <div className="row flex-xl-nowrap">
-                    <div className="col-12 col-md-2 bd-sidebar"> Nahashon</div>
-                    <div className="col-12 col-md-9 col-xl-10 py-md-3 pl-md-5 bd-content">
+                    <div className="col-12 col-md-2 bd-sidebar">
+                        <PlaylistDate/>
+
+                    </div>
+                    <div className="col-12 col-md-10 col-xl-10 py-md-3 pl-md-5 bd-content">
                         <button onClick={this.showUploadMediaModal} className="btn btn-primary btn-sm">Add Media
                         </button>
                         <PlayList/>
@@ -65,7 +68,7 @@ class App extends Component {
 
                     <div className="footer">
                         <div id="mp3_player">
-                            <div  id="playing">
+                            <div id="playing">
                                 <strong id="playing_song"></strong>
                             </div>
 

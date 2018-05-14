@@ -4,6 +4,7 @@ import Dropzone from "react-dropzone"
 import {addFile} from "../../actions/playlistActions"
 import PropTypes from "prop-types"
 import {connect} from "react-redux"
+import {secondsToHms, addTimes} from "../../shared/TimeFunctions"
 
 class AddMediaFiles extends React.Component {
     constructor(props) {
@@ -12,50 +13,52 @@ class AddMediaFiles extends React.Component {
         this.onDropRejected = this.onDropRejected.bind(this)
     }
 
-    secondsToHms(d) {
-        d = Number(d)
-
-        const h = Math.floor(d / 3600)
-        const m = Math.floor(d % 3600 / 60)
-        const s = Math.floor(d % 3600 % 60)
-        if (h === 0) {
-            return ('0' + m).slice(-2) + ":" + ('0' + s).slice(-2)
-        }
-        if (m === 0) {
-            return ('0' + s).slice(-2)
-        }
-
-        return ('0' + h).slice(-2) + ":" + ('0' + m).slice(-2) + ":" + ('0' + s).slice(-2)
-    }
 
     onDrop(acceptedFiles) {
-        let id=this.props.files.length+1
-        for (let i = 0; i < acceptedFiles.length; i++) {
-            const audio = new Audio()
-            audio.src = acceptedFiles[i].path
-            audio.addEventListener('loadedmetadata', () => {
-                const duration = this.secondsToHms(audio.duration)
-                this.props.addFile({
-                    id:id++,
-                    name: acceptedFiles[i].name,
-                    path: acceptedFiles[i].path,
-                    duration: duration,
-                    played:false
+        if (acceptedFiles.length > 0) {
+            let id = this.props.files.length + 1
+            acceptedFiles.map(file => {
+                const audio = new Audio()
+                audio.src = file.path
+                audio.addEventListener('loadedmetadata', () => {
+                    const duration = secondsToHms(audio.duration)
+                    let endTime = ''
+                    if (localStorage.getItem(new Date().toISOString().split("T")[0])){
+                        endTime = JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).endTime
+                    }
+                    this.props.addFile({
+                        id: id++,
+                        name: file.name,
+                        path: file.path,
+                        duration: duration,
+                        played: false,
+                        startTime: endTime
+                    })
+                    if (localStorage.getItem(new Date().toISOString().split("T")[0])) {
+                        let todayStore = JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0]))
+                        todayStore = {
+                            date: todayStore.date,
+                            time: todayStore.time,
+                            endTime: addTimes(endTime, duration)
+                        }
+                        localStorage.setItem(new Date().toISOString().split("T")[0], JSON.stringify(todayStore))
+                    }
                 })
             })
-            // );
-
-            //     const reader = new FileReader()
-            //     reader.onload = () => {
-            //         const fileAsBinaryString = reader.result
-            //       console.log(fileAsBinaryString)
-            //     }
-            //     reader.onabort = () => console.log('file reading was aborted')
-            //     reader.onerror = () => console.log('file reading has failed')
-            //
-            //     reader.readAsBinaryString(file)
+            this.props.onClose()
         }
-        this.props.onClose()
+        // );
+
+        //     const reader = new FileReader()
+        //     reader.onload = () => {
+        //         const fileAsBinaryString = reader.result
+        //       console.log(fileAsBinaryString)
+        //     }
+        //     reader.onabort = () => console.log('file reading was aborted')
+        //     reader.onerror = () => console.log('file reading has failed')
+        //
+        //     reader.readAsBinaryString(file)
+        // }
     }
 
     onDropRejected(...args) {
@@ -91,6 +94,7 @@ AddMediaFiles.propTypes = {
     show: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
 }
+
 function mapStateToProps(state) {
     return {files: state.playlistReducers}
 }

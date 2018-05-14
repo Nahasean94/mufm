@@ -1,5 +1,5 @@
-import {ADD_FILE, CLEAR_FILES, DELETE_FILE, UPDATE_FILE, GET_FILE} from "./types"
-import playlistReducers from '../reducers/playlistReducers'
+import {ADD_FILE, CLEAR_FILES, DELETE_FILE, UPDATE_FILE,} from "./types"
+
 
 export function addFile(file) {
     return {
@@ -16,7 +16,6 @@ export function clearFiles() {
 }
 
 export function updateFile(file) {
-    console.log("filing")
     return {
         type: UPDATE_FILE,
         payload: file

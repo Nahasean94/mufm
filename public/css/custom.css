@@ -1,5 +1,5 @@
-.bd-sidebar{
-    border-right: 1px solid rgba(0,0,0,.1);
+.bd-sidebar {
+    border-right: 1px solid rgba(0, 0, 0, .1);
 
     /*background-color: whitesmoke;*/
     /*position: fixed;*/
@@ -8,14 +8,15 @@
     /*height: 100%;*/
     /*line-height: 60px;*/
 
-
 }
-.bd-content{
+
+.bd-content {
     background: white;
     margin-bottom: 80px;
 }
+
 .footer {
-    border-top: 2px solid rgba(0,0,0,.1);
+    border-top: 2px solid rgba(0, 0, 0, .1);
     position: fixed;
     bottom: 0;
     width: 100%;
@@ -25,20 +26,44 @@
     /*padding:5px ;*/
 
 }
-div#mp3_player{ width:900px; height:60px; background:#000; margin:1px auto 1px auto;  }
-div#mp3_player > div > audio{  width:900px; background:#000; float:left;  }
-div#mp3_player > canvas{ width:900px; height:30px; background:#000; float:left; }
-#playing{
-    background:white;
+
+div#mp3_player {
+    width: 900px;
+    height: 60px;
+    background: #000;
+    margin: 1px auto 1px auto;
 }
-#audio_box{
+
+div#mp3_player > div > audio {
+    width: 900px;
+    background: #000;
+    float: left;
+}
+
+div#mp3_player > canvas {
+    width: 900px;
+    height: 30px;
+    background: #000;
+    float: left;
+}
+
+#playing {
+    background: white;
+}
+
+#audio_box {
     background: #000;
 }
 
-table{
+table {
     cursor: pointer;
-    user-select:none;
+    user-select: none;
 }
-   td{
-       font-size: 0.8em;
-   }
+
+td {
+    font-size: 0.8em;
+}
+
+#timeline{
+    font-size: 0.8em;
+}

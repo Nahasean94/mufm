@@ -8,6 +8,7 @@ import PlayListItem from "./PlayListItem"
 class PlayList extends React.Component {
     constructor(props){
         super(props)
+        this.props.clearFiles()
         this.props.files.map(file=>this.props.addFile(file))
     }
 
@@ -25,7 +26,7 @@ class PlayList extends React.Component {
                 </thead>
                 <tbody>
                 {this.props.files.map((file,i)=>{
-                    return <PlayListItem key={i} filename={file.name} duration={file.duration} id={file.id} path={file.path} played={file.played}/>
+                    return <PlayListItem key={i} filename={file.name} duration={file.duration} id={file.id} path={file.path} played={file.played} startTime={file.startTime?file.startTime:''}/>
                 })}
                 </tbody>
             </table>

@@ -1,4 +1,4 @@
-import {ADD_FILE, CLEAR_FILES, DELETE_FILE, UPDATE_FILE,GET_FILE} from "../actions/types"
+import {ADD_FILE, CLEAR_FILES, DELETE_FILE, UPDATE_FILE} from "../actions/types"
 import findIndex from 'lodash/findIndex'
 
 export default (state = [], action) => {
@@ -8,11 +8,12 @@ export default (state = [], action) => {
         case CLEAR_FILES:
             return []
         case UPDATE_FILE:
-                console.log("updating fied")
-            return state.filter(file => {
-                if (file.id === action.payload.id) {
-                    return file
+            return state.map(file=>{
+// console.log(action.payload)
+                if(file.id===action.payload.id){
+                    return action.payload
                 }
+                return file
             })
         case DELETE_FILE:
             const index = findIndex(state, {id: action.payload.id})

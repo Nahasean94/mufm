@@ -1,6 +1,7 @@
-import {updateFile} from './actions/playlistActions'
-// import {connect} from "react-redux"
-// import PropTypes from "prop-types"
+// import {updateFile} from './actions/playlistActions'
+// import PlayListItem from "./components/playlist/PlayListItem"
+// // import {connect} from "react-redux"
+// // import PropTypes from "prop-types"
 class Player {
     playlist = []
 
@@ -18,13 +19,20 @@ class Player {
         if(playFrom>=existingPlaylist.length){
             playFrom=0
         }
-        updateFile({
-            id:playFrom,
-            path: existingPlaylist[playFrom].path,
-            filename:existingPlaylist[playFrom].filename,
-            duration:existingPlaylist[playFrom].duration,
-            played:true
-        })
+        // updateFile({
+        //     id:playFrom,
+        //     path: existingPlaylist[playFrom].path,
+        //     filename:existingPlaylist[playFrom].filename,
+        //     duration:existingPlaylist[playFrom].duration,
+        //     played:true
+        // })
+       // new PlayListItem().hasPlayed({
+       //      id:playFrom,
+       //      path: existingPlaylist[playFrom].path,
+       //      filename:existingPlaylist[playFrom].filename,
+       //      duration:existingPlaylist[playFrom].duration,
+       //      played:true
+       //  })
             document.getElementById('playing_song').innerText = existingPlaylist[playFrom].filename
             const audioPlayer = document.getElementById('audio_player')
             audioPlayer.src = existingPlaylist[playFrom].path

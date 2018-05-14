@@ -9,25 +9,71 @@ class PlayListItem extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            ...this.props,
             isPlaying: false,
         }
         this.play = this.play.bind(this)
-        // PlayListItem.playNext = PlayListItem.playNext.bind(this)
+        Player.addToPlayList({id: this.state.id, path: this.state.path, filename: this.state.filename, duration: this.state.duration, played: this.state.played})
     }
 
     play() {
-        Player.startPlaying(this.props.id - 1)
+        this.startPlaying(this.state.id - 1)
+    }
+
+    startPlaying(playFrom) {
+        const existingPlaylist = Player.getPlayList()
+        // for (let i = playFrom; i < existingPlaylist.length; i++) {
+        if (playFrom >= existingPlaylist.length) {
+            playFrom = 0
+        }
+        // updateFile({
+        //     id:playFrom,
+        //     path: existingPlaylist[playFrom].path,
+        //     filename:existingPlaylist[playFrom].filename,
+        //     duration:existingPlaylist[playFrom].duration,
+        //     played:true
+        // })
+        this.hasPlayed({
+            id: playFrom+1,
+            path: existingPlaylist[playFrom].path,
+            filename: existingPlaylist[playFrom].filename,
+            duration: existingPlaylist[playFrom].duration,
+            played: true
+        })
+        this.setState({
+            id: playFrom+1,
+            path: existingPlaylist[playFrom].path,
+            filename: existingPlaylist[playFrom].filename,
+            duration: existingPlaylist[playFrom].duration,
+            played: true
+        })
+        document.getElementById('playing_song').innerText = existingPlaylist[playFrom].filename
+        const audioPlayer = document.getElementById('audio_player')
+        audioPlayer.src = existingPlaylist[playFrom].path
+        audioPlayer.play()
+        this.setState({isPlaying: true})
+        audioPlayer.addEventListener('ended', () => {
+            this.startPlaying(playFrom + 1)
+        })
+        // }
+    }
+
+    hasPlayed(media) {
+        // console.log(media)
+        // this.props.updateFile(media)
+
 
     }
 
     render() {
-        const {filename, id, duration, played, path} = this.props
-        Player.addToPlayList({id: id, path: path, filename: filename, duration: duration, played: played})
+        const {filename, id, duration, played, path,startTime} = this.props
+console.log(startTime)
+
         return (
-            <tr className={classnames({"table-success": played}, {"table-primary": this.state.isPlaying})}>
+            <tr className={classnames({"table-success": played}, )}>
                 <td>{id}</td>
                 <td onDoubleClick={this.play}>{filename}</td>
-                <td>{''}</td>
+                <td>{startTime}</td>
                 <td>{duration}</td>
                 <td>{''}</td>
                 <td>{''}</td>
@@ -43,8 +89,12 @@ PlayListItem.propTypes = {
     path: PropTypes.string.isRequired,
     updateFile: PropTypes.func.isRequired,
     played: PropTypes.bool.isRequired,
+    startTime:PropTypes.string.isRequired,
 
 }
+// function mapStateToProps(state) {
+//     return {files: state.playlistReducers}
+// }
 
 
 export default connect(null, {updateFile,})(PlayListItem)
