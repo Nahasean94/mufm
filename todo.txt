@@ -16,3 +16,6 @@ remove files from list
 save playlist to localstorage
 
 you cannot select start time in an empty playlist
+
+
+adjust dates when playback is interrupted

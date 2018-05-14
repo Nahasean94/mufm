@@ -5,7 +5,8 @@ import TextFieldGroup from "../shared/TextFieldsGroup"
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {updateFile} from "../actions/playlistActions"
-import {tConv12,addTimes} from "../shared/TimeFunctions"
+import {tConv12, addTimes, convert_to_24h} from "../shared/TimeFunctions"
+import Player from '../Player'
 
 class PlaylistDate extends Component {
     constructor(props) {
@@ -14,7 +15,7 @@ class PlaylistDate extends Component {
             date: '',
             time: '',
             timelineDate: new Date().toDateString(),
-            timelineTime: localStorage.getItem(new Date().toISOString().split("T")[0]) ?tConv12(JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).time) : 'not set',
+            timelineTime: localStorage.getItem(new Date().toISOString().split("T")[0]) ? tConv12(JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).time) : 'not set',
             errors: {},
             isLoading: false,
             invalid: false,
@@ -87,10 +88,10 @@ class PlaylistDate extends Component {
     onSelectTime(e) {
         e.preventDefault()
         if (this.isTimeValid()) {
-            let timer=this.state.time
+            let timer = this.state.time
             this.setState({
                 errors: {}, isLoading: true,
-                timelineTime:  this.state.time,
+                timelineTime: this.state.time,
                 date: '',
                 startTime: this.state.time,
             })
@@ -120,18 +121,29 @@ class PlaylistDate extends Component {
                     played: file.played,
                     startTime: timer
                 })
-                timer=addTimes((timer).split(" ")[0], file.duration)
+                timer = addTimes((timer).split(" ")[0], file.duration)
                 let todayItem = JSON.parse(localStorage.getItem(todayDate))
                 todayItem = {
                     date: todayItem.date,
                     time: todayItem.time,
-                    endTime:timer
+                    endTime: timer
                 }
                 localStorage.setItem(todayDate, JSON.stringify(todayItem))
             })
+            //Start playing when the time reaches
+            setInterval(function () {
+
+                let currentTime = new Date().toLocaleTimeString()
+                if (currentTime.match(/am|pm/i) || currentTime.toString().match(/am|pm/i)) {
+                    currentTime = convert_to_24h(currentTime)
+                    console.log(currentTime)
+                }
+                if (currentTime === JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).time + ":00") {
+                    Player.startPlaying(0)
+                }
+            }, 1000)
         }
     }
-
 
 
     render() {
