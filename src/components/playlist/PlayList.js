@@ -18,6 +18,7 @@ class PlayList extends React.Component {
                 <thead>
                 <tr>
                     <th scope="col">#</th>
+                    <th scope="col">Cover</th>
                     <th scope="col">Name</th>
                     <th scope="col">Start Time</th>
                     <th scope="col">Duration</th>
@@ -26,7 +27,7 @@ class PlayList extends React.Component {
                 </thead>
                 <tbody>
                 {this.props.files.map((file,i)=>{
-                    return <PlayListItem key={i} filename={file.name} duration={file.duration} id={file.id} path={file.path} played={file.played} startTime={file.startTime?file.startTime:''}/>
+                    return <PlayListItem key={i} filename={file.name} duration={file.duration} id={file.id} path={file.path} played={file.played} startTime={file.startTime?file.startTime:''}  cover={file.cover}/>
                 })}
                 </tbody>
             </table>

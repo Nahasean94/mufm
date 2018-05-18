@@ -13,7 +13,13 @@ class PlayListItem extends React.Component {
             isPlaying: false,
         }
         this.play = this.play.bind(this)
-        Player.addToPlayList({id: this.state.id, path: this.state.path, filename: this.state.filename, duration: this.state.duration, played: this.state.played})
+        Player.addToPlayList({
+            id: this.state.id,
+            path: this.state.path,
+            filename: this.state.filename,
+            duration: this.state.duration,
+            played: this.state.played
+        })
     }
 
     play() {
@@ -34,14 +40,14 @@ class PlayListItem extends React.Component {
         //     played:true
         // })
         this.hasPlayed({
-            id: playFrom+1,
+            id: playFrom + 1,
             path: existingPlaylist[playFrom].path,
             filename: existingPlaylist[playFrom].filename,
             duration: existingPlaylist[playFrom].duration,
             played: true
         })
         this.setState({
-            id: playFrom+1,
+            id: playFrom + 1,
             path: existingPlaylist[playFrom].path,
             filename: existingPlaylist[playFrom].filename,
             duration: existingPlaylist[playFrom].duration,
@@ -66,12 +72,16 @@ class PlayListItem extends React.Component {
     }
 
     render() {
-        const {filename, id, duration, played, path,startTime} = this.props
-console.log(startTime)
+        const {filename, id, duration, played, path, startTime,} = this.props
+        let {cover} = this.props
+        if (!cover) {
+            cover = 'media/mp3.png'
+        }
 
         return (
-            <tr className={classnames({"table-success": played}, )}>
+            <tr className={classnames({"table-success": played},)}>
                 <td>{id}</td>
+                <td><img src={cover} width="20" height="20"/></td>
                 <td onDoubleClick={this.play}>{filename}</td>
                 <td>{startTime}</td>
                 <td>{duration}</td>
@@ -89,7 +99,8 @@ PlayListItem.propTypes = {
     path: PropTypes.string.isRequired,
     updateFile: PropTypes.func.isRequired,
     played: PropTypes.bool.isRequired,
-    startTime:PropTypes.string.isRequired,
+    startTime: PropTypes.string.isRequired,
+    cover: PropTypes.string,
 
 }
 // function mapStateToProps(state) {

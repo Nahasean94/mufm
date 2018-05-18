@@ -1,4 +1,4 @@
-import {ADD_FILE, CLEAR_FILES, DELETE_FILE, UPDATE_FILE,} from "./types"
+import {ADD_FILE, CLEAR_FILES, DELETE_FILE, UPDATE_FILE, ADD_DURATION, ADD_IMAGE} from "./types"
 
 
 export function addFile(file) {
@@ -18,6 +18,19 @@ export function clearFiles() {
 export function updateFile(file) {
     return {
         type: UPDATE_FILE,
+        payload: file
+    }
+}
+
+export function addDuration(file) {
+    return {
+        type: ADD_DURATION,
+        payload: file
+    }
+}
+export function addCover(file) {
+    return {
+        type: ADD_IMAGE,
         payload: file
     }
 }

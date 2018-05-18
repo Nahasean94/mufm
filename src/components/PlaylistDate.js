@@ -88,7 +88,7 @@ class PlaylistDate extends Component {
     onSelectTime(e) {
         e.preventDefault()
         if (this.isTimeValid()) {
-            let timer = this.state.time
+            let timer = this.state.time+":00"
             this.setState({
                 errors: {}, isLoading: true,
                 timelineTime: this.state.time,
@@ -99,7 +99,7 @@ class PlaylistDate extends Component {
             if (!localStorage.getItem(todayDate)) {
                 localStorage.setItem(todayDate, JSON.stringify({
                     date: todayDate,
-                    time: this.state.time
+                    time: this.state.time+":00"
                 }))
             }
             else {
@@ -107,7 +107,7 @@ class PlaylistDate extends Component {
                 todayItem = {
                     date: todayItem.date,
                     // time: tConv12(this.state.time)
-                    time: this.state.time
+                    time: this.state.time+":00"
                 }
                 localStorage.setItem(todayDate, JSON.stringify(todayItem))
             }
@@ -136,7 +136,6 @@ class PlaylistDate extends Component {
                 let currentTime = new Date().toLocaleTimeString()
                 if (currentTime.match(/am|pm/i) || currentTime.toString().match(/am|pm/i)) {
                     currentTime = convert_to_24h(currentTime)
-                    console.log(currentTime)
                 }
                 if (currentTime === JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).time + ":00") {
                     Player.startPlaying(0)
