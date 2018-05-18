@@ -38,7 +38,7 @@ export function addCover(file) {
 export function deleteFile(fileId) {
     return {
         type: DELETE_FILE,
-        payload: fileId
+        payload:{id: fileId}
     }
 }
 

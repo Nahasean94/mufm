@@ -13,6 +13,7 @@ class PlayList extends React.Component {
     }
 
     render() {
+        let count=1
         return (
             <table className="table table-sm table-hover " >
                 <thead>
@@ -22,12 +23,12 @@ class PlayList extends React.Component {
                     <th scope="col">Name</th>
                     <th scope="col">Start Time</th>
                     <th scope="col">Duration</th>
-                    <th scope="col">Actions</th>
+                    <th scope="col">Remove</th>
                 </tr>
                 </thead>
                 <tbody>
                 {this.props.files.map((file,i)=>{
-                    return <PlayListItem key={i} filename={file.name} duration={file.duration} id={file.id} path={file.path} played={file.played} startTime={file.startTime?file.startTime:''}  cover={file.cover}/>
+                    return <PlayListItem key={i} filename={file.name} duration={file.duration} id={file.id} path={file.path} played={file.played} startTime={file.startTime?file.startTime:''}  cover={file.cover} count={count++}/>
                 })}
                 </tbody>
             </table>

@@ -2,7 +2,7 @@ import React from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-import {updateFile} from '../../actions/playlistActions'
+import {updateFile, deleteFile} from '../../actions/playlistActions'
 import Player from '../../Player'
 
 class PlayListItem extends React.Component {
@@ -20,10 +20,11 @@ class PlayListItem extends React.Component {
             duration: this.state.duration,
             played: this.state.played
         })
+        this.onDeleteFile = this.onDeleteFile.bind(this)
     }
 
-    play() {
-        this.startPlaying(this.state.id - 1)
+    play(e) {
+        this.startPlaying(e.target.id - 1)
     }
 
     startPlaying(playFrom) {
@@ -71,8 +72,14 @@ class PlayListItem extends React.Component {
 
     }
 
+    onDeleteFile(e) {
+        e.preventDefault()
+        this.props.deleteFile(this.props.id)
+        Player.removeSong(this.props.id)
+    }
+
     render() {
-        const {filename, id, duration, played, path, startTime,} = this.props
+        const {filename, count,id, duration, played, path, startTime,} = this.props
         let {cover} = this.props
         if (!cover) {
             cover = 'media/mp3.png'
@@ -80,13 +87,13 @@ class PlayListItem extends React.Component {
 
         return (
             <tr className={classnames({"table-success": played},)}>
-                <td>{id}</td>
+                <td>{count}</td>
                 <td><img src={cover} width="20" height="20"/></td>
-                <td onDoubleClick={this.play}>{filename}</td>
+                <td onDoubleClick={this.play} id={id}>{filename}</td>
                 <td>{startTime}</td>
                 <td>{duration}</td>
-                <td>{''}</td>
-                <td>{''}</td>
+                <td><i className="fa fa-trash" onClick={this.onDeleteFile}></i></td>
+
             </tr>
         )
     }
@@ -96,11 +103,13 @@ PlayListItem.propTypes = {
     filename: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,
     duration: PropTypes.string.isRequired,
+    count: PropTypes.number.isRequired,
     path: PropTypes.string.isRequired,
     updateFile: PropTypes.func.isRequired,
+    deleteFile: PropTypes.func.isRequired,
     played: PropTypes.bool.isRequired,
     startTime: PropTypes.string.isRequired,
-    cover: PropTypes.string,
+    cover: PropTypes.string.isRequired,
 
 }
 // function mapStateToProps(state) {
@@ -108,4 +117,4 @@ PlayListItem.propTypes = {
 // }
 
 
-export default connect(null, {updateFile,})(PlayListItem)
+export default connect(null, {updateFile, deleteFile})(PlayListItem)

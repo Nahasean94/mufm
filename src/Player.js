@@ -2,6 +2,8 @@
 // import PlayListItem from "./components/playlist/PlayListItem"
 // // import {connect} from "react-redux"
 // // import PropTypes from "prop-types"
+import findIndex from "lodash/findIndex"
+
 class Player {
     playlist = []
 
@@ -13,11 +15,19 @@ class Player {
         return this.playlist
     }
 
+    removeSong(id) {
+        const index = findIndex(this.playlist, {id: id})
+        if (index >= 0) {
+            return [this.playlist.slice(0, index), this.playlist.slice(index + 1)]
+        }
+        return this.playlist
+    }
+
     startPlaying(playFrom) {
         const existingPlaylist = this.getPlayList()
         // for (let i = playFrom; i < existingPlaylist.length; i++) {
-        if(playFrom>=existingPlaylist.length){
-            playFrom=0
+        if (playFrom >= existingPlaylist.length) {
+            playFrom = 0
         }
         // updateFile({
         //     id:playFrom,
@@ -26,21 +36,21 @@ class Player {
         //     duration:existingPlaylist[playFrom].duration,
         //     played:true
         // })
-       // new PlayListItem().hasPlayed({
-       //      id:playFrom,
-       //      path: existingPlaylist[playFrom].path,
-       //      filename:existingPlaylist[playFrom].filename,
-       //      duration:existingPlaylist[playFrom].duration,
-       //      played:true
-       //  })
-            document.getElementById('playing_song').innerText = existingPlaylist[playFrom].filename
-            const audioPlayer = document.getElementById('audio_player')
-            audioPlayer.src = existingPlaylist[playFrom].path
-            audioPlayer.play()
-            // this.setState({playingFile: this.props.id})
-            audioPlayer.addEventListener('ended', () => {
-                this.startPlaying(playFrom+1)
-            })
+        // new PlayListItem().hasPlayed({
+        //      id:playFrom,
+        //      path: existingPlaylist[playFrom].path,
+        //      filename:existingPlaylist[playFrom].filename,
+        //      duration:existingPlaylist[playFrom].duration,
+        //      played:true
+        //  })
+        document.getElementById('playing_song').innerText = existingPlaylist[playFrom].filename
+        const audioPlayer = document.getElementById('audio_player')
+        audioPlayer.src = existingPlaylist[playFrom].path
+        audioPlayer.play()
+        // this.setState({playingFile: this.props.id})
+        audioPlayer.addEventListener('ended', () => {
+            this.startPlaying(playFrom + 1)
+        })
         // }
     }
 
@@ -93,6 +103,7 @@ class Player {
         }
     }
 }
+
 // Player.propTypes = {
 //     updateFile: PropTypes.func.isRequired,
 // }
