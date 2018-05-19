@@ -14,11 +14,12 @@ class PlayListItem extends React.Component {
         }
         this.play = this.play.bind(this)
         Player.addToPlayList({
-            id: this.state.id,
-            path: this.state.path,
-            filename: this.state.filename,
-            duration: this.state.duration,
-            played: this.state.played
+            id: this.props.id,
+            path: this.props.path,
+            filename: this.props.filename,
+            duration: this.props.duration,
+            played: this.props.played,
+            cover:this.props.cover
         })
         this.onDeleteFile = this.onDeleteFile.bind(this)
     }
@@ -54,6 +55,8 @@ class PlayListItem extends React.Component {
             duration: existingPlaylist[playFrom].duration,
             played: true
         })
+        // console.log(existingPlaylist[playFrom])
+        document.getElementById('cover-image').src=existingPlaylist[playFrom].cover
         document.getElementById('playing_song').innerText = existingPlaylist[playFrom].filename
         const audioPlayer = document.getElementById('audio_player')
         audioPlayer.src = existingPlaylist[playFrom].path
@@ -84,7 +87,6 @@ class PlayListItem extends React.Component {
         if (!cover) {
             cover = 'media/mp3.png'
         }
-
         return (
             <tr className={classnames({"table-success": played},)}>
                 <td>{count}</td>

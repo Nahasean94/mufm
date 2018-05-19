@@ -54,6 +54,7 @@ class App extends Component {
     render() {
         const {showUploadMediaModal} = this.state
         return (
+            <div>
             <div className="container-fluid">
                 <div className="row flex-xl-nowrap">
                     <div className="col-12 col-md-2 bd-sidebar">
@@ -62,16 +63,24 @@ class App extends Component {
                     </div>
                     <div className="col-12 col-md-10 col-xl-10 py-md-3 pl-md-5 bd-content">
                         <button onClick={this.showUploadMediaModal} className="btn btn-primary btn-sm">Add Media
+                        </button>&nbsp;
+                        <button onClick={this.showUploadMediaModal} className="btn btn-primary btn-sm">Save Playlist
                         </button>
                         <PlayList/>
                     </div>
-
+                </div>
+            </div>
                     <div className="footer">
+                <div className="container-fluid">
+                    <div className="row flex-xl-nowrap">
+                        <div className=" col-sm-1 text-center cover">
+                        <img width={60} height={60} className="rounded" id="cover-image"/>
+                        </div>
+                        <div className=" col-sm-11  py-md-3 pl-md-5 bd-content">
                         <div id="mp3_player">
                             <div id="playing">
                                 <strong id="playing_song"></strong>
                             </div>
-
                             <div id="audio_box">
 
                             </div>
@@ -83,10 +92,12 @@ class App extends Component {
                     </div>
                 </div>
 
+                    </div>
                 {showUploadMediaModal ?
                     <AddMediaFiles show={showUploadMediaModal} onClose={this.closeUploadMediaModal} onDrop={this.onDrop}
                                    onDropRejected={this.onDropRejected}
                     /> : ''}
+            </div>
             </div>
 
         )

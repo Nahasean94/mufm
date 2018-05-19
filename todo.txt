@@ -11,11 +11,10 @@ animation when playing
 
 keyboard short cuts like pause, delete, etc
 
-remove files from list
 
 save playlist to localstorage
 
-you cannot select start time in an empty playlist
+
 
 
 adjust dates when playback is interrupted
@@ -31,51 +30,3 @@ adjust dates when playback is interrupted
 
 
 
-
-
-
-
-
-    onDrop(acceptedFiles) {
-        if (acceptedFiles.length > 0) {
-            let id = this.props.files.length + 1
-            acceptedFiles.map(file => {
-                // cons"./music-file.mp3"ole.log(file)
-                jsmediatags.read(file, {
-                    onSuccess: function(tag) {
-                        console.log(tag);
-                    },
-                    onError: function(error) {
-                        console.log(':(', error.type, error.info);
-                    }
-                });
-                const audio = new Audio()
-                audio.src = file.path
-                audio.addEventListener('loadedmetadata', () => {
-                    const duration = secondsToHms(audio.duration)
-                    let endTime = ''
-                    if (localStorage.getItem(new Date().toISOString().split("T")[0])){
-                        endTime = JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).endTime
-                    }
-
-                    this.props.addFile({
-                        id: id++,
-                        name: file.name,
-                        path: file.path,
-                        duration: duration,
-                        played: false,
-                        startTime: endTime
-                    })
-                    if (localStorage.getItem(new Date().toISOString().split("T")[0])) {
-                        let todayStore = JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0]))
-                        todayStore = {
-                            date: todayStore.date,
-                            time: todayStore.time,
-                            endTime: addTimes(endTime, duration)
-                        }
-                        localStorage.setItem(new Date().toISOString().split("T")[0], JSON.stringify(todayStore))
-                    }
-                })
-            })
-            this.props.onClose()
-        }

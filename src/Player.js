@@ -23,26 +23,21 @@ class Player {
         return this.playlist
     }
 
+    addCover(song) {
+         this.playlist.forEach(file => {
+            if (file.path === song.path && file.cover===undefined) {
+                file.cover=song.cover
+            }
+            return file
+        })
+    }
+
     startPlaying(playFrom) {
         const existingPlaylist = this.getPlayList()
         // for (let i = playFrom; i < existingPlaylist.length; i++) {
         if (playFrom >= existingPlaylist.length) {
             playFrom = 0
         }
-        // updateFile({
-        //     id:playFrom,
-        //     path: existingPlaylist[playFrom].path,
-        //     filename:existingPlaylist[playFrom].filename,
-        //     duration:existingPlaylist[playFrom].duration,
-        //     played:true
-        // })
-        // new PlayListItem().hasPlayed({
-        //      id:playFrom,
-        //      path: existingPlaylist[playFrom].path,
-        //      filename:existingPlaylist[playFrom].filename,
-        //      duration:existingPlaylist[playFrom].duration,
-        //      played:true
-        //  })
         document.getElementById('playing_song').innerText = existingPlaylist[playFrom].filename
         const audioPlayer = document.getElementById('audio_player')
         audioPlayer.src = existingPlaylist[playFrom].path

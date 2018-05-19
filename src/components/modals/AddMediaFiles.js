@@ -8,6 +8,7 @@ import {secondsToHms, addTimes,} from "../../shared/TimeFunctions"
 import {parse} from 'id3-parser'
 import {convertFileToBuffer} from 'id3-parser/lib/universal/helpers'
 import * as jsmediatags from "jsmediatags"
+import  Player from "../../Player"
 
 
 class AddMediaFiles extends React.Component {
@@ -26,9 +27,6 @@ class AddMediaFiles extends React.Component {
             let id = this.props.files.length + 1
 
             for (let i = 0; i < acceptedFiles.length; i++) {
-
-                // acceptedFiles.map(file => {
-                // cons"./music-acceptedFiles[i].mp3"ole.log(file)
                 this.props.addFile({
                     id: id++,
                     name: acceptedFiles[i].name,
@@ -42,7 +40,6 @@ class AddMediaFiles extends React.Component {
 
                 jsmediatags.read(acceptedFiles[i], {
                     onSuccess: (tag) => {
-
                         const image = tag.tags.picture
                         if (image) {
                             let base64String = ""
@@ -50,8 +47,11 @@ class AddMediaFiles extends React.Component {
                                 base64String += String.fromCharCode(image.data[i])
                             }
                             let base64 = "data:" + image.format + ";base64," + window.btoa(base64String)
-                            // console.log(base64)
                             this.props.addCover({
+                                path: acceptedFiles[i].path,
+                                cover: base64
+                            })
+                            Player.addCover({
                                 path: acceptedFiles[i].path,
                                 cover: base64
                             })
@@ -70,7 +70,6 @@ class AddMediaFiles extends React.Component {
                     if (JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0]))) {
                         startTime = JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).time
                     }
-
                     this.props.addDuration({
                         name: acceptedFiles[i].name,
                         path: acceptedFiles[i].path,
@@ -89,19 +88,7 @@ class AddMediaFiles extends React.Component {
                         localStorage.setItem(new Date().toISOString().split("T")[0], JSON.stringify(todayStore))
                     }
                 }
-                // })
-                //     onError: function(error) {
-                //
-
-
-                // onError: function (error) {
-                //     console.log(':(', error.type, error.info)
-                //
-                // }
             }
-            // )
-
-            // console.log(':(', error.type, error.info)
         }
 
 // });
