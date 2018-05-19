@@ -24,6 +24,7 @@ class AddMediaFiles extends React.Component {
 
     onDrop(acceptedFiles) {
         if (acceptedFiles.length > 0) {
+            document.getElementById('save-playlist').hidden=false
             let id = this.props.files.length + 1
 
             for (let i = 0; i < acceptedFiles.length; i++) {
@@ -63,11 +64,12 @@ class AddMediaFiles extends React.Component {
                 audio.onloadedmetadata = () => {
                     const duration = secondsToHms(audio.duration)
                     let endTime = ''
-                    if (localStorage.getItem(new Date().toISOString().split("T")[0])) {
+                    const today=new Date().toISOString().split("T")[0]
+                    if (localStorage.getItem(today)) {
                         endTime = JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).endTime
                     }
                     let startTime = ''
-                    if (JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0]))) {
+                    if (JSON.parse(localStorage.getItem(today))) {
                         startTime = JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).time
                     }
                     this.props.addDuration({
@@ -78,8 +80,8 @@ class AddMediaFiles extends React.Component {
                         startTime: endTime ? endTime : startTime ? startTime : '',
                         isDuration: true
                     })
-                    if (localStorage.getItem(new Date().toISOString().split("T")[0])) {
-                        let todayStore = JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0]))
+                    if (localStorage.getItem(today)) {
+                        let todayStore = JSON.parse(localStorage.getItem(today))
                         todayStore = {
                             date: todayStore.date,
                             time: todayStore.time,

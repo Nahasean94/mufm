@@ -4,16 +4,7 @@ cannot set start time of a past date, and cannot set past time of today
 
 colors to indicate what has been played and what is playing
 
-cover images for songs
-
-animation when playing
-
-
 keyboard short cuts like pause, delete, etc
-
-
-save playlist to localstorage
-
 
 
 
@@ -30,3 +21,4 @@ adjust dates when playback is interrupted
 
 
 
+animation when playing

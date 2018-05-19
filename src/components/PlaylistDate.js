@@ -87,6 +87,7 @@ class PlaylistDate extends Component {
 
     onSelectTime(e) {
         e.preventDefault()
+
         if (this.isTimeValid()) {
             let timer = this.state.time+":00"
             this.setState({
@@ -106,7 +107,7 @@ class PlaylistDate extends Component {
                 let todayItem = JSON.parse(localStorage.getItem(todayDate))
                 todayItem = {
                     date: todayItem.date,
-                    // time: tConv12(this.state.time)
+
                     time: this.state.time+":00"
                 }
                 localStorage.setItem(todayDate, JSON.stringify(todayItem))

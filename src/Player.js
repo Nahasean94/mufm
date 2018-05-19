@@ -18,9 +18,10 @@ class Player {
     removeSong(id) {
         const index = findIndex(this.playlist, {id: id})
         if (index >= 0) {
-            return [this.playlist.slice(0, index), this.playlist.slice(index + 1)]
+          this.playlist.splice(index,1)
+
         }
-        return this.playlist
+        // return this.playlist
     }
 
     addCover(song) {

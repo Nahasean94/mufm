@@ -34,13 +34,7 @@ class PlayListItem extends React.Component {
         if (playFrom >= existingPlaylist.length) {
             playFrom = 0
         }
-        // updateFile({
-        //     id:playFrom,
-        //     path: existingPlaylist[playFrom].path,
-        //     filename:existingPlaylist[playFrom].filename,
-        //     duration:existingPlaylist[playFrom].duration,
-        //     played:true
-        // })
+
         this.hasPlayed({
             id: playFrom + 1,
             path: existingPlaylist[playFrom].path,
@@ -57,6 +51,7 @@ class PlayListItem extends React.Component {
         })
         // console.log(existingPlaylist[playFrom])
         document.getElementById('cover-image').src=existingPlaylist[playFrom].cover
+        document.getElementById('cover-image').hidden=false
         document.getElementById('playing_song').innerText = existingPlaylist[playFrom].filename
         const audioPlayer = document.getElementById('audio_player')
         audioPlayer.src = existingPlaylist[playFrom].path
@@ -79,6 +74,8 @@ class PlayListItem extends React.Component {
         e.preventDefault()
         this.props.deleteFile(this.props.id)
         Player.removeSong(this.props.id)
+        document.getElementById('save-playlist').hidden=false
+        console.log(Player.getPlayList())
     }
 
     render() {

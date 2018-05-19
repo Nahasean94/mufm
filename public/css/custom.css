@@ -29,22 +29,22 @@
 
 div#mp3_player {
     width: 100%;
-    height: 60px;
+    height: 80px;
     background: #000;
-    margin: 1px 20px 1px 1px;
+    /*margin: 1px 20px 1px 1px;*/
 }
 
 div#mp3_player > div > audio {
     width: 100%;
     background: #000;
-    float: left;
+    /*float: left;*/
 }
 
 div#mp3_player > canvas {
     width: 100%;
     height: 30px;
     background: #000;
-    float: left;
+    /*float: left;*/
 }
 
 #playing {
@@ -69,5 +69,5 @@ td {
 }
 
 .cover{
-    margin: 10px
+    margin-top: 10px
 }

@@ -15,6 +15,7 @@ class App extends Component {
         this.closeUploadMediaModal = this.closeUploadMediaModal.bind(this)
         this.onDrop = this.onDrop.bind(this)
         this.onDropRejected = this.onDropRejected.bind(this)
+        this.savePlaylist = this.savePlaylist.bind(this)
     }
 
     showUploadMediaModal() {
@@ -23,6 +24,25 @@ class App extends Component {
 
     closeUploadMediaModal() {
         this.setState({showUploadMediaModal: false})
+    }
+    savePlaylist() {
+        const todayDate = new Date().toISOString().split("T")[0]
+        if (!localStorage.getItem(todayDate)) {
+            localStorage.setItem(todayDate, JSON.stringify({
+                date: todayDate,
+                playlist: Player.getPlayList()
+            }))
+        }
+        else {
+            let todayItem = JSON.parse(localStorage.getItem(todayDate))
+            todayItem = {
+                date: todayItem.date,
+                playlist: Player.getPlayList()
+            }
+            localStorage.setItem(todayDate, JSON.stringify(todayItem))
+        }
+        document.getElementById('save-playlist').hidden =true
+
     }
 
     onDrop(acceptedFiles) {
@@ -64,7 +84,7 @@ class App extends Component {
                     <div className="col-12 col-md-10 col-xl-10 py-md-3 pl-md-5 bd-content">
                         <button onClick={this.showUploadMediaModal} className="btn btn-primary btn-sm">Add Media
                         </button>&nbsp;
-                        <button onClick={this.showUploadMediaModal} className="btn btn-primary btn-sm">Save Playlist
+                        <button hidden={true} onClick={this.savePlaylist} className="btn btn-primary btn-sm" id="save-playlist">Save Playlist
                         </button>
                         <PlayList/>
                     </div>
@@ -73,10 +93,10 @@ class App extends Component {
                     <div className="footer">
                 <div className="container-fluid">
                     <div className="row flex-xl-nowrap">
-                        <div className=" col-sm-1 text-center cover">
-                        <img width={60} height={60} className="rounded" id="cover-image"/>
+                        <div className="col-sm  cover">
+                        <img hidden={true} width={60} height={60} className="rounded" id="cover-image"/>
                         </div>
-                        <div className=" col-sm-11  py-md-3 pl-md-5 bd-content">
+                        <div className="col-sm-11  bd-content">
                         <div id="mp3_player">
                             <div id="playing">
                                 <strong id="playing_song"></strong>
