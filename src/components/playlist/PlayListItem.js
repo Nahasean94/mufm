@@ -19,9 +19,10 @@ class PlayListItem extends React.Component {
             filename: this.props.filename,
             duration: this.props.duration,
             played: this.props.played,
-            cover:this.props.cover
+            cover: this.props.cover
         })
         this.onDeleteFile = this.onDeleteFile.bind(this)
+        this.onDragOver = this.onDragOver.bind(this)
     }
 
     play(e) {
@@ -50,8 +51,8 @@ class PlayListItem extends React.Component {
             played: true
         })
         // console.log(existingPlaylist[playFrom])
-        document.getElementById('cover-image').src=existingPlaylist[playFrom].cover
-        document.getElementById('cover-image').hidden=false
+        document.getElementById('cover-image').src = existingPlaylist[playFrom].cover
+        document.getElementById('cover-image').hidden = false
         document.getElementById('playing_song').innerText = existingPlaylist[playFrom].filename
         const audioPlayer = document.getElementById('audio_player')
         audioPlayer.src = existingPlaylist[playFrom].path
@@ -70,23 +71,32 @@ class PlayListItem extends React.Component {
 
     }
 
+    onDragOver(e, id) {
+        e.preventDefault()
+        console.log(e.target)
+    }
+
+    onDrop(e, id) {
+        // console.log(e.target)
+    }
+
     onDeleteFile(e) {
         e.preventDefault()
         this.props.deleteFile(this.props.id)
         Player.removeSong(this.props.id)
-        document.getElementById('save-playlist').hidden=false
+        document.getElementById('save-playlist').hidden = false
         console.log(Player.getPlayList())
     }
 
     render() {
-        const {filename, count,id, duration, played, path, startTime,} = this.props
+        const {filename, count, id, duration, played, path, startTime,} = this.props
         let {cover} = this.props
         if (!cover) {
             cover = 'media/mp3.png'
         }
         return (
-            <tr className={classnames({"table-success": played},)}>
-                <td>{count}</td>
+            <tr className={classnames({"table-success": played},)} >
+                {/*<td>{count}</td>*/}
                 <td><img src={cover} width="20" height="20"/></td>
                 <td onDoubleClick={this.play} id={id}>{filename}</td>
                 <td>{startTime}</td>

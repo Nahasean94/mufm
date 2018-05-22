@@ -1,18 +1,18 @@
-Dates- selecting a past date displays a playlist of the files played that day and displays add media button
+Dates- selecting a past date displays a playlist of the files played that day and doesnt  display add media button
 
-cannot set start time of a past date, and cannot set past time of today
 
 colors to indicate what has been played and what is playing
 
 keyboard short cuts like pause, delete, etc
 
 
-
 adjust dates when playback is interrupted
 
 
+drag and drop rows
 
-
+progress bars
+flash messages
 
 
 

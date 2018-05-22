@@ -4,7 +4,7 @@ import {isEmpty} from 'lodash'
 import TextFieldGroup from "../shared/TextFieldsGroup"
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-import {updateFile} from "../actions/playlistActions"
+import {updateFile, clearFiles} from "../actions/playlistActions"
 import {tConv12, addTimes, convert_to_24h} from "../shared/TimeFunctions"
 import Player from '../Player'
 
@@ -15,11 +15,12 @@ class PlaylistDate extends Component {
             date: '',
             time: '',
             timelineDate: new Date().toDateString(),
-            timelineTime: localStorage.getItem(new Date().toISOString().split("T")[0]) ? tConv12(JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).time) : 'not set',
+            timelineTime: localStorage.getItem(new Date().toISOString().split("T")[0]) ? localStorage.getItem(new Date().toISOString().split("T")[0]).time?tConv12(JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).time) : 'not set':'not set',
             errors: {},
             isLoading: false,
             invalid: false,
-            startTime: ''
+            startTime: '',
+
         }
         this.onSelectDate = this.onSelectDate.bind(this)
         this.onSelectTime = this.onSelectTime.bind(this)
@@ -54,16 +55,38 @@ class PlaylistDate extends Component {
     onSelectDate(e) {
         e.preventDefault()
         if (this.isDateValid()) {
-            this.setState({errors: {}, isLoading: true})
-            localStorage.setItem(this.state.date, JSON.stringify({date: this.state.date}))
+//selected date is past
+//                 console.log(Player.playlist)
+            if (Date.parse(new Date().toLocaleDateString()) > Date.parse(this.state.date)) {
+                document.getElementById('add-media').hidden = true
+                document.getElementById('save-playlist').hidden = true
+                Player.emptyPlayList()
+                this.props.clearFiles()
+                this.setState({disableTime: true})
+            }
+            //selected date is future
+            else if (Date.parse(new Date().toLocaleDateString()) < Date.parse(this.state.date)) {
+                Player.emptyPlayList()
+                // console.log(Player.playlist)
+                document.getElementById('save-playlist').hidden = true
+                // document.getElementById('add-media').hidden = true
+                // this.setState({disableTime: true})
+                this.props.clearFiles()
+                localStorage.setItem(this.state.date, JSON.stringify({date: this.state.date}))
+            }
+            else {
+
+                localStorage.setItem(this.state.date, JSON.stringify({date: this.state.date}))
+            }
         }
+
 //             else{
 //                 let todayItem=JSON.parse(localStorage.getItem(todayDatetodayItem,
 //     date:
 // }
 //         }
         // }
-        this.setState({timelineDate: this.state.date, time: '', date: ''})
+        this.setState({timelineDate: this.state.date, time: '', date: '', errors: {}, isLoading: true})
     }
 
     validateTime(data) {
@@ -71,6 +94,19 @@ class PlaylistDate extends Component {
         if (validator.isEmpty(data.time)) {
             errors.time = 'This field is required'
         }
+        if (!this.state.date) {
+
+            const regex = new RegExp(':', 'g'),
+                setTime = this.state.time + ":00",
+                timeNow = convert_to_24h(new Date().toLocaleTimeString())
+            if (parseInt(setTime.replace(regex, ''), 10) < parseInt(timeNow.replace(regex, ''), 10)) {
+                errors.time = "Start time cannot be in the past"
+            }
+            // else {
+            //     console.log('timeStr2 is smaller then timeStr1');
+            // }
+        }
+
         return {
             errors,
             isValid: isEmpty(errors)
@@ -89,28 +125,31 @@ class PlaylistDate extends Component {
         e.preventDefault()
 
         if (this.isTimeValid()) {
-            let timer = this.state.time+":00"
+            // console.log(this.state.time)
+            // console.log(new Date().toLocaleTimeString())
+            let timer = this.state.time + ":00"
             this.setState({
                 errors: {}, isLoading: true,
                 timelineTime: this.state.time,
-                date: '',
                 startTime: this.state.time,
             })
             const todayDate = new Date().toISOString().split("T")[0]
-            if (!localStorage.getItem(todayDate)) {
-                localStorage.setItem(todayDate, JSON.stringify({
-                    date: todayDate,
-                    time: this.state.time+":00"
-                }))
+            if (!this.state.date) {
+                if (!localStorage.getItem(todayDate)) {
+                    localStorage.setItem(todayDate, JSON.stringify({
+                        date: todayDate,
+                        time: this.state.time + ":00"
+                    }))
+                }
             }
             else {
-                let todayItem = JSON.parse(localStorage.getItem(todayDate))
+                let todayItem = JSON.parse(localStorage.getItem(this.state.date))
                 todayItem = {
                     date: todayItem.date,
 
-                    time: this.state.time+":00"
+                    time: this.state.time + ":00"
                 }
-                localStorage.setItem(todayDate, JSON.stringify(todayItem))
+                localStorage.setItem(this.state.date, JSON.stringify(todayItem))
             }
 
             this.props.files.map(file => {
@@ -147,7 +186,7 @@ class PlaylistDate extends Component {
 
 
     render() {
-        const {errors, date, time, timelineDate, timelineTime} = this.state
+        const {errors, date, time, timelineDate, timelineTime, disableTime} = this.state
 
         return (
             <div>
@@ -176,10 +215,11 @@ class PlaylistDate extends Component {
                         value={time}
                         onChange={this.onChange}
                         error={errors.time}
+                        disabled={disableTime}
                     />
                     <div className="form-group">
                         <input type="submit" className="form-control form-control-sm btn btn-sm btn-primary"
-                               value="Save"/>
+                               value="Save" disabled={disableTime}/>
 
                     </div>
                 </form>
@@ -200,6 +240,7 @@ class PlaylistDate extends Component {
 PlaylistDate.propTypes = {
     files: PropTypes.array.isRequired,
     updateFile: PropTypes.func.isRequired,
+    clearFiles: PropTypes.func.isRequired,
 }
 
 function mapStateToProps(state) {
@@ -208,4 +249,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps, {updateFile})(PlaylistDate)
+export default connect(mapStateToProps, {updateFile, clearFiles})(PlaylistDate)

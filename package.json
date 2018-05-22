@@ -12,6 +12,7 @@
     "lodash": "^4.17.4",
     "prop-types": "^15.6.0",
     "react": "^16.3.2",
+    "react-bootstrap-table": "^4.3.1",
     "react-date-picker": "^6.10.1",
     "react-dom": "^16.3.2",
     "react-dropzone": "^4.2.9",
@@ -24,6 +25,7 @@
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
     "shortid": "^2.2.8",
+    "sortablejs": "^1.7.0",
     "validator": "^9.1.2",
     "wait-on": "^2.1.0"
   },

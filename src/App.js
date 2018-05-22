@@ -10,6 +10,7 @@ class App extends Component {
         super(props)
         this.state = {
             showUploadMediaModal: false,
+            playlistDate:''
         }
         this.showUploadMediaModal = this.showUploadMediaModal.bind(this)
         this.closeUploadMediaModal = this.closeUploadMediaModal.bind(this)
@@ -82,7 +83,7 @@ class App extends Component {
 
                     </div>
                     <div className="col-12 col-md-10 col-xl-10 py-md-3 pl-md-5 bd-content">
-                        <button onClick={this.showUploadMediaModal} className="btn btn-primary btn-sm">Add Media
+                        <button onClick={this.showUploadMediaModal} className="btn btn-primary btn-sm" id="add-media">Add Media
                         </button>&nbsp;
                         <button hidden={true} onClick={this.savePlaylist} className="btn btn-primary btn-sm" id="save-playlist">Save Playlist
                         </button>
@@ -98,7 +99,7 @@ class App extends Component {
                         </div>
                         <div className="col-sm-11  bd-content">
                         <div id="mp3_player">
-                            <div id="playing">
+                            <div id="playing" >
                                 <strong id="playing_song"></strong>
                             </div>
                             <div id="audio_box">

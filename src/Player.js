@@ -15,19 +15,26 @@ class Player {
         return this.playlist
     }
 
+    emptyPlayList() {
+        for (let i = 0; i < this.playlist; i++) {
+            this.playlist.pop()
+            console.log(this.playlist)
+        }
+    }
+
     removeSong(id) {
         const index = findIndex(this.playlist, {id: id})
         if (index >= 0) {
-          this.playlist.splice(index,1)
+            this.playlist.splice(index, 1)
 
         }
         // return this.playlist
     }
 
     addCover(song) {
-         this.playlist.forEach(file => {
-            if (file.path === song.path && file.cover===undefined) {
-                file.cover=song.cover
+        this.playlist.forEach(file => {
+            if (file.path === song.path && file.cover === undefined) {
+                file.cover = song.cover
             }
             return file
         })
@@ -87,7 +94,7 @@ class Player {
             fbc_array = new Uint8Array(analyser.frequencyBinCount)
             analyser.getByteFrequencyData(fbc_array)
             ctx.clearRect(0, 0, canvas.width, canvas.height) // Clear the canvas
-            ctx.fillStyle = '#17c900' // Color of the bars
+            ctx.fillStyle = '#17bb00' // Color of the bars
             bars = 100
             for (let i = 0; i < bars; i++) {
                 bar_x = i * 3
@@ -98,6 +105,7 @@ class Player {
             }
         }
     }
+
 }
 
 // Player.propTypes = {
