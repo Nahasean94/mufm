@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {updateFile, deleteFile} from '../../actions/playlistActions'
 import Player from '../../Player'
+import {addTimes, tConv12} from "../../shared/TimeFunctions"
 
 class PlayListItem extends React.Component {
     constructor(props) {
@@ -85,7 +86,39 @@ class PlayListItem extends React.Component {
         this.props.deleteFile(this.props.id)
         Player.removeSong(this.props.id)
         document.getElementById('save-playlist').hidden = false
-        console.log(Player.getPlayList())
+        // console.log(Player.getPlayList())
+        let startTime = localStorage.getItem(new Date().toISOString().split("T")[0]) ? JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).time ? tConv12(JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).time) : '' : ''
+        let todayDate = new Date().toISOString().split("T")[0]
+        if (startTime) {
+            let timer = startTime
+            this.props.files.map((file,count) => {
+                this.props.updateFile({
+                    id: file.id,
+                    path: file.path,
+                    name: file.name,
+                    duration: file.duration,
+                    played: file.played,
+                    startTime: timer
+                })
+                timer = addTimes((timer).split(" ")[0], file.duration)
+                let todayItem = JSON.parse(localStorage.getItem(todayDate))
+                todayItem = {
+                    date: todayItem.date,
+                    time: todayItem.time,
+                    endTime: timer
+                }
+                localStorage.setItem(todayDate, JSON.stringify(todayItem))
+                if(count===this.props.files.length){
+                    let finalItem = JSON.parse(localStorage.getItem(todayDate))
+                    finalItem = {
+                        date: finalItem.date,
+                        time: finalItem.time,
+                        endTime: timer
+                    }
+                    localStorage.setItem(todayDate, JSON.stringify(finalItem))
+                }
+            })
+        }
     }
 
     render() {
@@ -95,7 +128,7 @@ class PlayListItem extends React.Component {
             cover = 'media/mp3.png'
         }
         return (
-            <tr className={classnames({"table-success": played},)} >
+            <tr className={classnames({"table-success": played},)}>
                 {/*<td>{count}</td>*/}
                 <td><img src={cover} width="20" height="20"/></td>
                 <td onDoubleClick={this.play} id={id}>{filename}</td>
@@ -119,11 +152,12 @@ PlayListItem.propTypes = {
     played: PropTypes.bool.isRequired,
     startTime: PropTypes.string.isRequired,
     cover: PropTypes.string.isRequired,
+    files: PropTypes.array.isRequired,
 
 }
-// function mapStateToProps(state) {
-//     return {files: state.playlistReducers}
-// }
+function mapStateToProps(state) {
+    return {files: state.playlistReducers}
+}
 
 
-export default connect(null, {updateFile, deleteFile})(PlayListItem)
+export default connect(mapStateToProps, {updateFile, deleteFile})(PlayListItem)

@@ -8,7 +8,7 @@ import {secondsToHms, addTimes,} from "../../shared/TimeFunctions"
 import {parse} from 'id3-parser'
 import {convertFileToBuffer} from 'id3-parser/lib/universal/helpers'
 import * as jsmediatags from "jsmediatags"
-import  Player from "../../Player"
+import Player from "../../Player"
 
 
 class AddMediaFiles extends React.Component {
@@ -24,7 +24,7 @@ class AddMediaFiles extends React.Component {
 
     onDrop(acceptedFiles) {
         if (acceptedFiles.length > 0) {
-            document.getElementById('save-playlist').hidden=false
+            document.getElementById('save-playlist').hidden = false
             let id = this.props.files.length + 1
 
             for (let i = 0; i < acceptedFiles.length; i++) {
@@ -64,7 +64,7 @@ class AddMediaFiles extends React.Component {
                 audio.onloadedmetadata = () => {
                     const duration = secondsToHms(audio.duration)
                     let endTime = ''
-                    const today=new Date().toISOString().split("T")[0]
+                    const today = new Date().toISOString().split("T")[0]
                     if (localStorage.getItem(today)) {
                         endTime = JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).endTime
                     }
@@ -72,14 +72,27 @@ class AddMediaFiles extends React.Component {
                     if (JSON.parse(localStorage.getItem(today))) {
                         startTime = JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).time
                     }
-                    this.props.addDuration({
-                        name: acceptedFiles[i].name,
-                        path: acceptedFiles[i].path,
-                        duration: duration,
-                        played: false,
-                        startTime: endTime ? endTime : startTime ? startTime : '',
-                        isDuration: true
-                    })
+
+                    if (this.props.files.length > 0) {
+                        this.props.addDuration({
+                            name: acceptedFiles[i].name,
+                            path: acceptedFiles[i].path,
+                            duration: duration,
+                            played: false,
+                            startTime: endTime ? endTime : startTime ? startTime : '',
+                            isDuration: true
+                        })
+                    } else {
+                        this.props.addDuration({
+                            name: acceptedFiles[i].name,
+                            path: acceptedFiles[i].path,
+                            duration: duration,
+                            played: false,
+                            startTime: startTime ? startTime : '',
+                            isDuration: true
+                        })
+                    }
+
                     if (localStorage.getItem(today)) {
                         let todayStore = JSON.parse(localStorage.getItem(today))
                         todayStore = {
@@ -93,23 +106,8 @@ class AddMediaFiles extends React.Component {
             }
         }
 
-// });
-
-// })
         this.props.onClose()
-// }
-// );
 
-//     const reader = new FileReader()
-//     reader.onload = () => {
-//         const fileAsBinaryString = reader.result
-//       console.log(fileAsBinaryString)
-//     }
-//     reader.onabort = () => console.log('file reading was aborted')
-//     reader.onerror = () => console.log('file reading has failed')
-//
-//     reader.readAsBinaryString(file)
-// }
     }
 
     onDropRejected(...args) {
@@ -146,7 +144,7 @@ AddMediaFiles.propTypes = {
     onClose: PropTypes.func.isRequired,
     addDuration: PropTypes.func.isRequired,
     addCover: PropTypes.func.isRequired,
-    // files: PropTypes.func.isRequired,
+    files: PropTypes.array,
 }
 
 function mapStateToProps(state) {

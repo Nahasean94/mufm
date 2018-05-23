@@ -17,8 +17,17 @@ flash messages
 
 
 
+duration on table should be human readable
 
-
-
+//TODO  allow sorting of future playlists after drag and drop
 
 animation when playing
+
+
+
+
+
+TIMES
+adjusting start times and end times after deletion
+start times creation
+dates etc

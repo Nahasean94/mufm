@@ -15,7 +15,7 @@ class PlaylistDate extends Component {
             date: '',
             time: '',
             timelineDate: new Date().toDateString(),
-            timelineTime: localStorage.getItem(new Date().toISOString().split("T")[0]) ? localStorage.getItem(new Date().toISOString().split("T")[0]).time?tConv12(JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).time) : 'not set':'not set',
+            timelineTime: localStorage.getItem(new Date().toISOString().split("T")[0]) ? localStorage.getItem(new Date().toISOString().split("T")[0]).time ? tConv12(JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).time) : 'not set' : 'not set',
             errors: {},
             isLoading: false,
             invalid: false,
@@ -135,14 +135,31 @@ class PlaylistDate extends Component {
             })
             const todayDate = new Date().toISOString().split("T")[0]
             if (!this.state.date) {
+
                 if (!localStorage.getItem(todayDate)) {
                     localStorage.setItem(todayDate, JSON.stringify({
                         date: todayDate,
                         time: this.state.time + ":00"
                     }))
                 }
+                else {
+                    console.log(todayDate)
+                    let todayItem = JSON.parse(localStorage.getItem(todayDate))
+                    todayItem = {
+                        date: todayItem.date,
+                        time: this.state.time + ":00"
+                    }
+                    localStorage.setItem(this.state.date, JSON.stringify(todayItem))
+                }
             }
+            // else if (!localStorage.getItem(todayDate)) {
+            //     localStorage.setItem(todayDate, JSON.stringify({
+            //         date: todayDate,
+            //         time: this.state.time + ":00"
+            //     }))
+            // }
             else {
+                console.log("today's date is not in state")
                 let todayItem = JSON.parse(localStorage.getItem(this.state.date))
                 todayItem = {
                     date: todayItem.date,
