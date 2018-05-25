@@ -5,7 +5,7 @@ import TextFieldGroup from "../shared/TextFieldsGroup"
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {updateFile, clearFiles} from "../actions/playlistActions"
-import {tConv12, addTimes, convert_to_24h} from "../shared/TimeFunctions"
+import {tConv12, addTimes, convert_to_24h, subTimes} from "../shared/TimeFunctions"
 import Player from '../Player'
 
 class PlaylistDate extends Component {
@@ -198,6 +198,46 @@ class PlaylistDate extends Component {
                     Player.startPlaying(0)
                 }
             }, 1000)
+            const stopwatch = setInterval(() => {
+                const playTime = this.state.time + ":00"
+                let countDownDate = new Date(`${new Date().toISOString().split("T")[0]} ${playTime}`).getTime()
+
+//                     Get todays date and time
+                let now = new Date().getTime()
+
+                // Find the distance between now an the count down date
+                let distance = countDownDate - now
+                console.log(distance)
+
+                // Time calculations for days, hours, minutes and seconds
+                let days = Math.floor(distance / (1000 * 60 * 60 * 24))
+                let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+                let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
+                let seconds = Math.floor((distance % (1000 * 60)) / 1000)
+
+                // // If the count down is finished, write some text
+                if (distance > 0) {
+                    document.getElementById('playback-time').innerText="Playback starts in:"
+                    if (days > 0) {
+                        document.getElementById("clock").innerText = days + "d " + hours + "h " + minutes + "m " + seconds + "s "
+                    }
+                    else if (hours > 0) {
+                        document.getElementById("clock").innerText = hours + "h " + minutes + "m " + seconds + "s "
+                    }
+                    else if (minutes > 0) {
+                        document.getElementById("clock").innerText = minutes + "m " + seconds + "s "
+                    }
+                    else {
+                        document.getElementById("clock").innerText = seconds + "s "
+                    }
+                }
+                else {
+                    document.getElementById('playback-time').innerText=""
+                    document.getElementById("clock").innerText = ""
+                    clearInterval(stopwatch)
+                }
+            }, 1000)
+
         }
     }
 
@@ -219,7 +259,7 @@ class PlaylistDate extends Component {
                         error={errors.date}
                     />
                     <div className="form-group">
-                        <input type="submit" className="form-control form-control-sm btn btn-sm btn-primary"
+                        <input type="submit" className="form-control form-control-sm btn btn-sm btn-success"
                                value="Select"/>
 
                     </div>
@@ -235,7 +275,7 @@ class PlaylistDate extends Component {
                         disabled={disableTime}
                     />
                     <div className="form-group">
-                        <input type="submit" className="form-control form-control-sm btn btn-sm btn-primary"
+                        <input type="submit" className="form-control form-control-sm btn btn-sm btn-success"
                                value="Save" disabled={disableTime}/>
 
                     </div>

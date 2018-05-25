@@ -11,7 +11,7 @@ class PlayListItem extends React.Component {
         super(props)
         this.state = {
             ...this.props,
-            isPlaying: false,
+            // isPlaying: false,
         }
         this.play = this.play.bind(this)
         Player.addToPlayList({
@@ -23,7 +23,7 @@ class PlayListItem extends React.Component {
             cover: this.props.cover
         })
         this.onDeleteFile = this.onDeleteFile.bind(this)
-        this.onDragOver = this.onDragOver.bind(this)
+        // this.onDragOver = this.onDragOver.bind(this)
     }
 
     play(e) {
@@ -37,19 +37,33 @@ class PlayListItem extends React.Component {
             playFrom = 0
         }
 
-        this.hasPlayed({
-            id: playFrom + 1,
-            path: existingPlaylist[playFrom].path,
-            filename: existingPlaylist[playFrom].filename,
-            duration: existingPlaylist[playFrom].duration,
-            played: true
+        // this.hasPlayed({
+        //     id: playFrom + 1,
+        //     path: existingPlaylist[playFrom].path,
+        //     filename: existingPlaylist[playFrom].filename,
+        //     duration: existingPlaylist[playFrom].duration,
+        //     cover: existingPlaylist[playFrom].cover,
+        //     isPlaying:playFrom+1===file.id?true:file.played
+        // })
+        // this.setState({
+        //     id: playFrom + 1,
+        //     path: existingPlaylist[playFrom].path,
+        //     filename: existingPlaylist[playFrom].filename,
+        //     duration: existingPlaylist[playFrom].duration,
+        //     cover: existingPlaylist[playFrom].cover,
+        //
+        // })
+        this.props.files.map(file=>{
+        this.props.updateFile({
+            id: file.id,
+            path: file.path,
+            name: file.name,
+            duration: file.duration,
+            isPlaying: playFrom + 1 === file.id,
+            played: playFrom+1===file.id?true:file.played,
+            cover: file.cover,
+            startTime: file.startTime,
         })
-        this.setState({
-            id: playFrom + 1,
-            path: existingPlaylist[playFrom].path,
-            filename: existingPlaylist[playFrom].filename,
-            duration: existingPlaylist[playFrom].duration,
-            played: true
         })
         // console.log(existingPlaylist[playFrom])
         document.getElementById('cover-image').src = existingPlaylist[playFrom].cover
@@ -65,70 +79,62 @@ class PlayListItem extends React.Component {
         // }
     }
 
-    hasPlayed(media) {
-        // console.log(media)
-        // this.props.updateFile(media)
-
-
-    }
-
-    onDragOver(e, id) {
-        e.preventDefault()
-        console.log(e.target)
-    }
-
-    onDrop(e, id) {
-        // console.log(e.target)
-    }
-
     onDeleteFile(e) {
         e.preventDefault()
         this.props.deleteFile(this.props.id)
         Player.removeSong(this.props.id)
         document.getElementById('save-playlist').hidden = false
-        // console.log(Player.getPlayList())
         let startTime = localStorage.getItem(new Date().toISOString().split("T")[0]) ? JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).time ? tConv12(JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).time) : '' : ''
         let todayDate = new Date().toISOString().split("T")[0]
         if (startTime) {
             let timer = startTime
-            this.props.files.map((file,count) => {
-                this.props.updateFile({
-                    id: file.id,
-                    path: file.path,
-                    name: file.name,
-                    duration: file.duration,
-                    played: file.played,
-                    startTime: timer
-                })
-                timer = addTimes((timer).split(" ")[0], file.duration)
-                let todayItem = JSON.parse(localStorage.getItem(todayDate))
-                todayItem = {
-                    date: todayItem.date,
-                    time: todayItem.time,
-                    endTime: timer
-                }
-                localStorage.setItem(todayDate, JSON.stringify(todayItem))
-                if(count===this.props.files.length){
-                    let finalItem = JSON.parse(localStorage.getItem(todayDate))
-                    finalItem = {
-                        date: finalItem.date,
-                        time: finalItem.time,
+            this.props.files.map((file, count) => {
+                if (file.id !== this.props.id) {
+                    this.props.updateFile({
+                        id: file.id,
+                        path: file.path,
+                        name: file.name,
+                        duration: file.duration,
+                        played: file.played,
+                        cover: file.cover,
+                        startTime: timer
+                    })
+
+                    timer = addTimes((timer).split(" ")[0], file.duration)
+                    let todayItem = JSON.parse(localStorage.getItem(todayDate))
+                    todayItem = {
+                        date: todayItem.date,
+                        time: todayItem.time,
                         endTime: timer
                     }
-                    localStorage.setItem(todayDate, JSON.stringify(finalItem))
+                    localStorage.setItem(todayDate, JSON.stringify(todayItem))
+                    if (count === this.props.files.length) {
+                        let finalItem = JSON.parse(localStorage.getItem(todayDate))
+                        finalItem = {
+                            date: finalItem.date,
+                            time: finalItem.time,
+                            endTime: timer
+                        }
+                        localStorage.setItem(todayDate, JSON.stringify(finalItem))
+                    }
                 }
             })
         }
+
+
     }
 
     render() {
-        const {filename, count, id, duration, played, path, startTime,} = this.props
+        const {filename, isPlaying, id, duration, played, path, startTime,} = this.props
         let {cover} = this.props
         if (!cover) {
             cover = 'media/mp3.png'
         }
+        // console.log(played,id)
+
+
         return (
-            <tr className={classnames({"table-success": played},)}>
+            <tr className={classnames({"table-success":isPlaying},{"table-secondary": played},)}>
                 {/*<td>{count}</td>*/}
                 <td><img src={cover} width="20" height="20"/></td>
                 <td onDoubleClick={this.play} id={id}>{filename}</td>
@@ -153,8 +159,10 @@ PlayListItem.propTypes = {
     startTime: PropTypes.string.isRequired,
     cover: PropTypes.string.isRequired,
     files: PropTypes.array.isRequired,
+    isPlaying:PropTypes.bool.isRequired
 
 }
+
 function mapStateToProps(state) {
     return {files: state.playlistReducers}
 }

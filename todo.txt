@@ -31,3 +31,8 @@ TIMES
 adjusting start times and end times after deletion
 start times creation
 dates etc
+
+
+delete multiple items
+
+

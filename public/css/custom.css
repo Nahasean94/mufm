@@ -1,3 +1,6 @@
+body{
+    background: #f8f9fa;
+}
 .bd-sidebar {
     border-right: 1px solid rgba(0, 0, 0, .1);
 
@@ -11,8 +14,19 @@
 }
 
 .bd-content {
-    background: white;
+    background: #f8f9fa;
     margin-bottom: 80px;
+}
+
+.table-wrapper {
+    overflow: auto;
+    height: 560px !important;
+    width: 100%;
+}
+
+.navbar {
+    position: static;
+    /*margin-bottom: 30px;*/
 }
 
 .footer {
@@ -20,39 +34,48 @@
     position: fixed;
     bottom: 0;
     width: 100%;
-    height: 80px;
+    height: 100px;
     /*line-height: 60px;*/
-    background-color: white;
-    /*padding:5px ;*/
+    background-color: #f8f9fa;
+    /*margin-bottom:5px ;*/
 
 }
 
 div#mp3_player {
     width: 100%;
     height: 80px;
-    background: #000;
+    background: #f8f9fa;
     /*margin: 1px 20px 1px 1px;*/
 }
-
+#clock{
+    text-align: center;
+    font-size: 30px;
+    margin-top:0px;
+}
+#timer{
+    /*border:1px solid;*/
+    margin-top: 50px;
+}
 div#mp3_player > div > audio {
     width: 100%;
-    background: #000;
+    background: rgba(248, 249, 250, 0.38);
     /*float: left;*/
 }
 
 div#mp3_player > canvas {
     width: 100%;
     height: 30px;
-    background: #000;
+    background: #f8f9fa;
     /*float: left;*/
 }
 
 #playing {
-    background: white;
+    background: #f8f9fa;
+    /*color:white;*/
 }
 
 #audio_box {
-    background: #000;
+    background: #f8f9fa;
 }
 
 table {
@@ -64,10 +87,10 @@ td {
     font-size: 0.8em;
 }
 
-#timeline{
+#timeline {
     font-size: 0.8em;
 }
 
-.cover{
+.cover {
     margin-top: 10px
 }

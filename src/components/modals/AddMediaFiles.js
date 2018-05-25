@@ -73,7 +73,7 @@ class AddMediaFiles extends React.Component {
                         startTime = JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).time
                     }
 
-                    if (this.props.files.length > 0) {
+                    // if (this.props.files.length > 0) {
                         this.props.addDuration({
                             name: acceptedFiles[i].name,
                             path: acceptedFiles[i].path,
@@ -82,16 +82,16 @@ class AddMediaFiles extends React.Component {
                             startTime: endTime ? endTime : startTime ? startTime : '',
                             isDuration: true
                         })
-                    } else {
-                        this.props.addDuration({
-                            name: acceptedFiles[i].name,
-                            path: acceptedFiles[i].path,
-                            duration: duration,
-                            played: false,
-                            startTime: startTime ? startTime : '',
-                            isDuration: true
-                        })
-                    }
+                    // } else {
+                    //     this.props.addDuration({
+                    //         name: acceptedFiles[i].name,
+                    //         path: acceptedFiles[i].path,
+                    //         duration: duration,
+                    //         played: false,
+                    //         startTime: startTime ? startTime : '',
+                    //         isDuration: true
+                    //     })
+                    // }
 
                     if (localStorage.getItem(today)) {
                         let todayStore = JSON.parse(localStorage.getItem(today))
@@ -105,9 +105,7 @@ class AddMediaFiles extends React.Component {
                 }
             }
         }
-
         this.props.onClose()
-
     }
 
     onDropRejected(...args) {

@@ -94,7 +94,7 @@ class Player {
             fbc_array = new Uint8Array(analyser.frequencyBinCount)
             analyser.getByteFrequencyData(fbc_array)
             ctx.clearRect(0, 0, canvas.width, canvas.height) // Clear the canvas
-            ctx.fillStyle = '#17bb00' // Color of the bars
+            ctx.fillStyle = '#28a745' // Color of the bars
             bars = 100
             for (let i = 0; i < bars; i++) {
                 bar_x = i * 3

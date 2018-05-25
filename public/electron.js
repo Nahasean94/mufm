@@ -9,7 +9,7 @@ const isDev = require('electron-is-dev');
 let mainWindow;
 
 function createWindow() {
-    mainWindow = new BrowserWindow({width: 1200, height: 780, minWidth:1080,webPreferences:{
+    mainWindow = new BrowserWindow({width: 1200, height: 780, maxHeight:800, minWidth:1080,webPreferences:{
         webSecurity:false
         }});
     mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`);

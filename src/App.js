@@ -10,7 +10,7 @@ class App extends Component {
         super(props)
         this.state = {
             showUploadMediaModal: false,
-            playlistDate:''
+            playlistDate: ''
         }
         this.showUploadMediaModal = this.showUploadMediaModal.bind(this)
         this.closeUploadMediaModal = this.closeUploadMediaModal.bind(this)
@@ -26,6 +26,7 @@ class App extends Component {
     closeUploadMediaModal() {
         this.setState({showUploadMediaModal: false})
     }
+
     savePlaylist() {
         const todayDate = new Date().toISOString().split("T")[0]
         if (!localStorage.getItem(todayDate)) {
@@ -42,7 +43,7 @@ class App extends Component {
             }
             localStorage.setItem(todayDate, JSON.stringify(todayItem))
         }
-        document.getElementById('save-playlist').hidden =true
+        document.getElementById('save-playlist').hidden = true
 
     }
 
@@ -76,49 +77,67 @@ class App extends Component {
         const {showUploadMediaModal} = this.state
         return (
             <div>
-            <div className="container-fluid">
-                <div className="row flex-xl-nowrap">
-                    <div className="col-12 col-md-2 bd-sidebar">
-                        <PlaylistDate/>
-
-                    </div>
-                    <div className="col-12 col-md-10 col-xl-10 py-md-3 pl-md-5 bd-content">
-                        <button onClick={this.showUploadMediaModal} className="btn btn-primary btn-sm" id="add-media">Add Media
-                        </button>&nbsp;
-                        <button hidden={true} onClick={this.savePlaylist} className="btn btn-primary btn-sm" id="save-playlist">Save Playlist
-                        </button>
-                        <PlayList/>
-                    </div>
-                </div>
-            </div>
-                    <div className="footer">
                 <div className="container-fluid">
                     <div className="row flex-xl-nowrap">
-                        <div className="col-sm  cover">
-                        <img hidden={true} width={60} height={60} className="rounded" id="cover-image"/>
-                        </div>
-                        <div className="col-sm-11  bd-content">
-                        <div id="mp3_player">
-                            <div id="playing" >
-                                <strong id="playing_song"></strong>
-                            </div>
-                            <div id="audio_box">
+                        <div className="col-12 col-md-2 bd-sidebar">
+                            <PlaylistDate/>
+                            <div id="timer">
+                            <div><strong id="playback-time"></strong></div>
+                            <div id="clock">
 
                             </div>
-                            <canvas id="analyser_render"
-                            >
-                                {Player.renderAudioPlayer()}
-                            </canvas>
+                            </div>
+                        </div>
+                        <div className="col-12 col-md-10 col-xl-10 bd-content">
+                            <div className="container-fluid">
+                                <div className="navbar navbar-expand-lg navbar-light bg-light ">
+                                    <button onClick={this.showUploadMediaModal} className="btn btn-success btn-sm"
+                                            id="add-media">Add Media
+                                    </button>
+                                    &nbsp;
+                                    <button hidden={true} onClick={this.savePlaylist} className="btn btn-success btn-sm"
+                                            id="save-playlist">Save Playlist
+                                    </button>
+                                </div>
+                                <hr/>
+                                <div className="row flex-xl-nowrap">
+
+
+                                    <PlayList/>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div className="footer">
+                    <div className="container-fluid">
+                        <div className="row flex-xl-nowrap">
+                            <div className="col-sm  cover">
+                                <img hidden={true} width={60} height={60} className="rounded" id="cover-image"/>
+                            </div>
+                            <div className="col-sm-11  bd-content">
+                                <div id="mp3_player">
+                                    <div id="playing">
+                                        <strong id="playing_song"></strong>
+                                    </div>
+                                    <div id="audio_box">
+
+                                    </div>
+                                    <canvas id="analyser_render"
+                                    >
+                                        {Player.renderAudioPlayer()}
+                                    </canvas>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
-                {showUploadMediaModal ?
-                    <AddMediaFiles show={showUploadMediaModal} onClose={this.closeUploadMediaModal} onDrop={this.onDrop}
-                                   onDropRejected={this.onDropRejected}
-                    /> : ''}
-            </div>
+                    {showUploadMediaModal ?
+                        <AddMediaFiles show={showUploadMediaModal} onClose={this.closeUploadMediaModal}
+                                       onDrop={this.onDrop}
+                                       onDropRejected={this.onDropRejected}
+                        /> : ''}
+                </div>
             </div>
 
         )
