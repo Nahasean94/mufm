@@ -5,10 +5,9 @@ import {addFile, addDuration, addCover} from "../../actions/playlistActions"
 import PropTypes from "prop-types"
 import {connect} from "react-redux"
 import {secondsToHms, addTimes,} from "../../shared/TimeFunctions"
-import {parse} from 'id3-parser'
-import {convertFileToBuffer} from 'id3-parser/lib/universal/helpers'
 import * as jsmediatags from "jsmediatags"
-import Player from "../../Player"
+import Player from "../../shared/Player"
+import SetPlaylistDate from "../../shared/SetPlaylistDate"
 
 
 class AddMediaFiles extends React.Component {
@@ -64,13 +63,18 @@ class AddMediaFiles extends React.Component {
                 audio.onloadedmetadata = () => {
                     const duration = secondsToHms(audio.duration)
                     let endTime = ''
-                    const today = new Date().toISOString().split("T")[0]
-                    if (localStorage.getItem(today)) {
-                        endTime = JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).endTime
+                    // const date = date
+                    let date = SetPlaylistDate.getDate()
+                    //if date is not set assume today date
+                    if(!date){
+                      date=date
+                    }
+                    if (localStorage.getItem(date)) {
+                        endTime = JSON.parse(localStorage.getItem(date)).endTime
                     }
                     let startTime = ''
-                    if (JSON.parse(localStorage.getItem(today))) {
-                        startTime = JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).time
+                    if (JSON.parse(localStorage.getItem(date))) {
+                        startTime = JSON.parse(localStorage.getItem(date)).time
                     }
 
                     // if (this.props.files.length > 0) {
@@ -93,14 +97,14 @@ class AddMediaFiles extends React.Component {
                     //     })
                     // }
 
-                    if (localStorage.getItem(today)) {
-                        let todayStore = JSON.parse(localStorage.getItem(today))
-                        todayStore = {
-                            date: todayStore.date,
-                            time: todayStore.time,
+                    if (localStorage.getItem(date)) {
+                        let dateStore = JSON.parse(localStorage.getItem(date))
+                        dateStore = {
+                            date: dateStore.date,
+                            time: dateStore.time,
                             endTime: addTimes(endTime ? endTime : startTime, duration)
                         }
-                        localStorage.setItem(new Date().toISOString().split("T")[0], JSON.stringify(todayStore))
+                        localStorage.setItem(date, JSON.stringify(dateStore))
                     }
                 }
             }

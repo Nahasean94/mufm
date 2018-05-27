@@ -3,7 +3,7 @@ import classnames from 'classnames'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {updateFile, deleteFile} from '../../actions/playlistActions'
-import Player from '../../Player'
+import Player from '../../shared/Player'
 import {addTimes, tConv12} from "../../shared/TimeFunctions"
 
 class PlayListItem extends React.Component {
@@ -17,7 +17,7 @@ class PlayListItem extends React.Component {
         Player.addToPlayList({
             id: this.props.id,
             path: this.props.path,
-            filename: this.props.filename,
+            name: this.props.name,
             duration: this.props.duration,
             played: this.props.played,
             cover: this.props.cover
@@ -40,7 +40,7 @@ class PlayListItem extends React.Component {
         // this.hasPlayed({
         //     id: playFrom + 1,
         //     path: existingPlaylist[playFrom].path,
-        //     filename: existingPlaylist[playFrom].filename,
+        //     name: existingPlaylist[playFrom].name,
         //     duration: existingPlaylist[playFrom].duration,
         //     cover: existingPlaylist[playFrom].cover,
         //     isPlaying:playFrom+1===file.id?true:file.played
@@ -48,27 +48,27 @@ class PlayListItem extends React.Component {
         // this.setState({
         //     id: playFrom + 1,
         //     path: existingPlaylist[playFrom].path,
-        //     filename: existingPlaylist[playFrom].filename,
+        //     name: existingPlaylist[playFrom].name,
         //     duration: existingPlaylist[playFrom].duration,
         //     cover: existingPlaylist[playFrom].cover,
         //
         // })
-        this.props.files.map(file=>{
-        this.props.updateFile({
-            id: file.id,
-            path: file.path,
-            name: file.name,
-            duration: file.duration,
-            isPlaying: playFrom + 1 === file.id,
-            played: playFrom+1===file.id?true:file.played,
-            cover: file.cover,
-            startTime: file.startTime,
-        })
+        this.props.files.map(file => {
+            this.props.updateFile({
+                id: file.id,
+                path: file.path,
+                name: file.name,
+                duration: file.duration,
+                isPlaying: playFrom + 1 === file.id,
+                played: playFrom + 1 === file.id ? true : file.played,
+                cover: file.cover,
+                startTime: file.startTime,
+            })
         })
         // console.log(existingPlaylist[playFrom])
         document.getElementById('cover-image').src = existingPlaylist[playFrom].cover
         document.getElementById('cover-image').hidden = false
-        document.getElementById('playing_song').innerText = existingPlaylist[playFrom].filename
+        document.getElementById('playing_song').innerText = existingPlaylist[playFrom].name
         const audioPlayer = document.getElementById('audio_player')
         audioPlayer.src = existingPlaylist[playFrom].path
         audioPlayer.play()
@@ -125,19 +125,16 @@ class PlayListItem extends React.Component {
     }
 
     render() {
-        const {filename, isPlaying, id, duration, played, path, startTime,} = this.props
+        const {name, isPlaying, id, duration, played, path, startTime,} = this.props
         let {cover} = this.props
         if (!cover) {
             cover = 'media/mp3.png'
         }
-        // console.log(played,id)
-
-
         return (
-            <tr className={classnames({"table-success":isPlaying},{"table-secondary": played},)}>
+            <tr className={classnames({"table-success": isPlaying}, {"table-secondary": played},)}>
                 {/*<td>{count}</td>*/}
                 <td><img src={cover} width="20" height="20"/></td>
-                <td onDoubleClick={this.play} id={id}>{filename}</td>
+                <td onDoubleClick={this.play} id={id}>{name}</td>
                 <td>{startTime}</td>
                 <td>{duration}</td>
                 <td><i className="fa fa-trash" onClick={this.onDeleteFile}></i></td>
@@ -148,7 +145,7 @@ class PlayListItem extends React.Component {
 }
 
 PlayListItem.propTypes = {
-    filename: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,
     duration: PropTypes.string.isRequired,
     count: PropTypes.number.isRequired,
@@ -157,9 +154,9 @@ PlayListItem.propTypes = {
     deleteFile: PropTypes.func.isRequired,
     played: PropTypes.bool.isRequired,
     startTime: PropTypes.string.isRequired,
-    cover: PropTypes.string.isRequired,
+    cover: PropTypes.string,
     files: PropTypes.array.isRequired,
-    isPlaying:PropTypes.bool.isRequired
+    isPlaying: PropTypes.bool
 
 }
 

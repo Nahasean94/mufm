@@ -18,7 +18,6 @@ class Player {
     emptyPlayList() {
         for (let i = 0; i < this.playlist; i++) {
             this.playlist.pop()
-            console.log(this.playlist)
         }
     }
 

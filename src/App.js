@@ -1,8 +1,13 @@
 import React, {Component} from 'react'
 import AddMediaFiles from './components/modals/AddMediaFiles'
-import Player from "./Player"
+import Player from "./shared/Player"
 import PlayList from "./components/playlist/PlayList"
 import PlaylistDate from "./components/PlaylistDate"
+import SetPlaylistDate from "./shared/SetPlaylistDate"
+import {connect} from 'react-redux'
+import PropTypes from 'prop-types'
+
+const  {ipcRenderer} = window.require('electron')
 
 
 class App extends Component {
@@ -17,9 +22,9 @@ class App extends Component {
         this.onDrop = this.onDrop.bind(this)
         this.onDropRejected = this.onDropRejected.bind(this)
         this.savePlaylist = this.savePlaylist.bind(this)
-    }
 
-    showUploadMediaModal() {
+    }
+        showUploadMediaModal() {
         this.setState({showUploadMediaModal: true})
     }
 
@@ -27,22 +32,45 @@ class App extends Component {
         this.setState({showUploadMediaModal: false})
     }
 
-    savePlaylist() {
-        const todayDate = new Date().toISOString().split("T")[0]
-        if (!localStorage.getItem(todayDate)) {
-            localStorage.setItem(todayDate, JSON.stringify({
-                date: todayDate,
-                playlist: Player.getPlayList()
-            }))
+    savePlaylist(e) {
+        e.preventDefault()
+        let date = SetPlaylistDate.getDate()
+        //check if date is set, if it doesnt exist, assume today's date
+        if (!date) {
+            date = new Date().toISOString().split("T")[0]
         }
-        else {
-            let todayItem = JSON.parse(localStorage.getItem(todayDate))
-            todayItem = {
-                date: todayItem.date,
-                playlist: Player.getPlayList()
-            }
-            localStorage.setItem(todayDate, JSON.stringify(todayItem))
-        }
+        ipcRenderer.send('save-playlist', {
+            date: date,
+            playlist: Player.getPlayList()
+        })
+
+        //check if date exists in localstorage, if not create an entry, else update the entry
+        // const file = `/media/${date}.json`
+        // fs.readdirSync(__dirname).forEach(file => {
+        //     console.log(file);
+        // })
+        // jsonfile.writeFile(file, {
+        //     date: date,
+        //     playlist: Player.getPlayList()
+        // }, err=> {
+        //     console.error(err)
+        // })
+
+
+        // if (!localStorage.getItem(date)) {
+        //     localStorage.setItem(date, JSON.stringify({
+        //         date: date,
+        //         playlist: Player.getPlayList()
+        //     }))
+        // }
+        // else {
+        //     let todayItem = JSON.parse(localStorage.getItem(date))
+        //     todayItem = {
+        //         date: todayItem.date,
+        //         playlist: this.props.files
+        //     }
+        //     localStorage.setItem(date, JSON.stringify(todayItem))
+        // }
         document.getElementById('save-playlist').hidden = true
 
     }
@@ -82,10 +110,10 @@ class App extends Component {
                         <div className="col-12 col-md-2 bd-sidebar">
                             <PlaylistDate/>
                             <div id="timer">
-                            <div><strong id="playback-time"></strong></div>
-                            <div id="clock">
+                                <div><strong id="playback-time"></strong></div>
+                                <div id="clock">
 
-                            </div>
+                                </div>
                             </div>
                         </div>
                         <div className="col-12 col-md-10 col-xl-10 bd-content">
@@ -98,6 +126,7 @@ class App extends Component {
                                     <button hidden={true} onClick={this.savePlaylist} className="btn btn-success btn-sm"
                                             id="save-playlist">Save Playlist
                                     </button>
+
                                 </div>
                                 <hr/>
                                 <div className="row flex-xl-nowrap">
@@ -122,10 +151,10 @@ class App extends Component {
                                     </div>
                                     <div id="audio_box">
 
+                                        {Player.renderAudioPlayer()}
                                     </div>
                                     <canvas id="analyser_render"
                                     >
-                                        {Player.renderAudioPlayer()}
                                     </canvas>
                                 </div>
                             </div>
@@ -144,5 +173,14 @@ class App extends Component {
     }
 }
 
+App.propTypes = {
+    files: PropTypes.array,
+}
 
-export default App
+function mapStateToProps(state) {
+    return {
+        files: state.playlistReducers
+    }
+}
+
+export default connect(mapStateToProps, {})(App)

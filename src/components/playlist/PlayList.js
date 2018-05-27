@@ -5,17 +5,39 @@ import {connect} from 'react-redux'
 import {addFile, deleteFile, clearFiles, updateFile} from "../../actions/playlistActions"
 import PlayListItem from "./PlayListItem"
 import Sortable from "sortablejs"
+import Player from "../../shared/Player"
 
+const {ipcRenderer} = window.require('electron')
 
 class PlayList extends React.Component {
     constructor(props) {
         super(props)
         this.props.clearFiles()
-        this.props.files.map(file => this.props.addFile(file))
+        // this.props.files.map(file => this.props.addFile(file))
         this.onDrop = this.onDrop.bind(this)
+//populate the table with the day's playlist
+        ipcRenderer.send('get-playlist', new Date().toISOString().split("T")[0])
+        ipcRenderer.on('got-playlist', (event, playlist) => {
+            //check is playlist exists
+            if (playlist) {
+                playlist.map(file => {
+                    this.props.addFile(file)
+                })
+            }
+        })
+
+        // db.get('playlists')
+        //     .find({date: new Date().toISOString().split("T")[0]}).write()
+        // const playlist = db.get('playlists')
+        //     .find({date: new Date().toISOString().split("T")[0]}).write()
+        // //check is playlist exists
+        // if (playlist && playlist.playlist) {
+        //     playlist.playlist.map(file => {
+        //         this.props.addFile(file)
+        //     })
+        // }
     }
 
-    x
 
     componentDidMount() {
         const element = document.getElementById('playlist')
@@ -60,7 +82,6 @@ class PlayList extends React.Component {
     render() {
         let count = 1
         return (
-
             <div className="table-wrapper">
                 <table className="table table-sm table-hover table-borderless">
                     <thead>
@@ -75,7 +96,8 @@ class PlayList extends React.Component {
                     </thead>
                     <tbody id="playlist">
                     {this.props.files.map((file, i) => {
-                        return <PlayListItem key={i} filename={file.name} duration={file.duration} id={file.id}
+                        console.log(file)
+                        return <PlayListItem key={i} name={file.name} duration={file.duration} id={file.id}
                                              path={file.path} played={file.played}
                                              isPlaying={file.isPlaying}
                                              startTime={file.startTime ? file.startTime : ''} cover={file.cover}
