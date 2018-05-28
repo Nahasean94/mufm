@@ -6,10 +6,10 @@ export default (state = [], action) => {
         case ADD_FILE:
             return [...state, action.payload]
         case CLEAR_FILES:
-            return []
+            state.length=0
+            return state
         case UPDATE_FILE:
             return state.map(file => {
-// console.log(action.payload)
                 if (file.id === action.payload.id) {
                     return action.payload
                 }
@@ -17,7 +17,6 @@ export default (state = [], action) => {
             })
         case ADD_DURATION:
             return state.map(file => {
-// console.log(action.payload)
                 if (file.path === action.payload.path && file.isDuration === false) {
                     return {...action.payload, id: file.id, cover: file.cover}
                 }
@@ -25,9 +24,7 @@ export default (state = [], action) => {
             })
         case ADD_IMAGE:
             return state.map(file => {
-
                 if (file.path === action.payload.path && file.isCover === false) {
-
                     return {...file, cover: action.payload.cover}
                 }
                 return file

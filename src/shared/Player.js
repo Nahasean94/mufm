@@ -1,7 +1,3 @@
-// import {updateFile} from './actions/playlistActions'
-// import PlayListItem from "./components/playlist/PlayListItem"
-// // import {connect} from "react-redux"
-// // import PropTypes from "prop-types"
 import findIndex from "lodash/findIndex"
 
 class Player {
@@ -35,6 +31,16 @@ class Player {
             if (file.path === song.path && file.cover === undefined) {
                 file.cover = song.cover
             }
+            return file
+        })
+    }
+
+    addDuration(song) {
+        this.playlist.forEach(file => {
+            if (file.path === song.path && !file.isDuration) {
+                file.duration = song.duration
+            }
+
             return file
         })
     }

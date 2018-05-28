@@ -35,7 +35,7 @@ class AddMediaFiles extends React.Component {
                     played: false,
                     isDuration: false,
                     startTime: '',
-                    isCover: false
+                    isCover: false,
                 })
 
                 jsmediatags.read(acceptedFiles[i], {
@@ -55,6 +55,15 @@ class AddMediaFiles extends React.Component {
                                 path: acceptedFiles[i].path,
                                 cover: base64
                             })
+                        } else {
+                            this.props.addCover({
+                                path: acceptedFiles[i].path,
+                                cover: 'media/mp3.png'
+                            })
+                            Player.addCover({
+                                path: acceptedFiles[i].path,
+                                cover: 'media/mp3.png'
+                            })
                         }
                     }
                 })
@@ -66,8 +75,8 @@ class AddMediaFiles extends React.Component {
                     // const date = date
                     let date = SetPlaylistDate.getDate()
                     //if date is not set assume today date
-                    if(!date){
-                      date=date
+                    if (!date) {
+                        date = new Date().toISOString().split("T")[0]
                     }
                     if (localStorage.getItem(date)) {
                         endTime = JSON.parse(localStorage.getItem(date)).endTime
@@ -78,14 +87,18 @@ class AddMediaFiles extends React.Component {
                     }
 
                     // if (this.props.files.length > 0) {
-                        this.props.addDuration({
-                            name: acceptedFiles[i].name,
-                            path: acceptedFiles[i].path,
-                            duration: duration,
-                            played: false,
-                            startTime: endTime ? endTime : startTime ? startTime : '',
-                            isDuration: true
-                        })
+                    this.props.addDuration({
+                        name: acceptedFiles[i].name,
+                        path: acceptedFiles[i].path,
+                        duration: duration,
+                        played: false,
+                        startTime: endTime ? endTime : startTime ? startTime : '',
+                        isDuration: true
+                    })
+                    Player.addDuration({
+                        path: acceptedFiles[i].path,
+                        duration: duration,
+                    })
                     // } else {
                     //     this.props.addDuration({
                     //         name: acceptedFiles[i].name,

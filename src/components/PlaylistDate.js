@@ -8,7 +8,8 @@ import {updateFile, clearFiles, addFile} from "../actions/playlistActions"
 import {tConv12, addTimes, convert_to_24h,} from "../shared/TimeFunctions"
 import Player from '../shared/Player'
 import SetPlaylistDate from "../shared/SetPlaylistDate"
-const  {ipcRenderer} = window.require('electron')
+
+const {ipcRenderer} = window.require('electron')
 
 class PlaylistDate extends Component {
     constructor(props) {
@@ -58,12 +59,14 @@ class PlaylistDate extends Component {
         e.preventDefault()
         if (this.isDateValid()) {
 
+            this.props.clearFiles()
+
+            // console.log(this.props.files)
 //selected date is past
             if (Date.parse(new Date().toLocaleDateString()) > Date.parse(this.state.date)) {
                 document.getElementById('add-media').hidden = true
                 document.getElementById('save-playlist').hidden = true
                 Player.emptyPlayList()
-                this.props.clearFiles()
                 this.setState({disableTime: true})
                 //populate the table with the day's playlist
                 ipcRenderer.send('get-playlist', this.state.date)
@@ -137,6 +140,7 @@ class PlaylistDate extends Component {
                     //         this.props.addFile(file)
                     //     })
                     // }
+                    this.props.clearFiles()
                     ipcRenderer.send('get-playlist', this.state.date)
                     ipcRenderer.on('got-playlist', (event, playlist) => {
                         //check is playlist exists
@@ -214,7 +218,6 @@ class PlaylistDate extends Component {
                     }))
                 }
                 else {
-                    console.log(todayDate)
                     let todayItem = JSON.parse(localStorage.getItem(todayDate))
                     todayItem = {
                         date: todayItem.date,
@@ -247,7 +250,8 @@ class PlaylistDate extends Component {
                     name: file.name,
                     duration: file.duration,
                     played: file.played,
-                    startTime: timer
+                    startTime: timer,
+                    cover:file.cover
                 })
                 timer = addTimes((timer).split(" ")[0], file.duration)
                 let todayItem = JSON.parse(localStorage.getItem(todayDate))
@@ -259,16 +263,16 @@ class PlaylistDate extends Component {
                 localStorage.setItem(todayDate, JSON.stringify(todayItem))
             })
             //Start playing when the time reaches
-            setInterval(function () {
-
-                let currentTime = new Date().toLocaleTimeString()
-                if (currentTime.match(/am|pm/i) || currentTime.toString().match(/am|pm/i)) {
-                    currentTime = convert_to_24h(currentTime)
-                }
-                if (currentTime === JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).time + ":00") {
-                    Player.startPlaying(0)
-                }
-            }, 1000)
+            // setInterval(function () {
+            //     let currentTime = new Date().toLocaleTimeString()
+            //     if (currentTime.match(/am|pm/i) || currentTime.toString().match(/am|pm/i)) {
+            //         currentTime = convert_to_24h(currentTime)
+            //     }
+            //     if (currentTime === JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).time + ":00") {
+            //         Player.startPlaying(0)
+            //     }
+            // }, 1000)
+            //show the timer to playback start time
             const stopwatch = setInterval(() => {
                 const playTime = this.state.time + ":00"
                 let countDownDate = new Date(`${new Date().toISOString().split("T")[0]} ${playTime}`).getTime()
@@ -306,6 +310,7 @@ class PlaylistDate extends Component {
                     document.getElementById('playback-time').innerText = ""
                     document.getElementById("clock").innerText = ""
                     clearInterval(stopwatch)
+                    this.props.startPlaying(0,this)
                 }
             }, 1000)
 
@@ -368,6 +373,7 @@ class PlaylistDate extends Component {
 PlaylistDate.propTypes = {
     files: PropTypes.array.isRequired,
     updateFile: PropTypes.func.isRequired,
+    startPlaying: PropTypes.func.isRequired,
     clearFiles: PropTypes.func.isRequired,
     addFile: PropTypes.func.isRequired,
 }

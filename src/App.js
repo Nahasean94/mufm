@@ -4,10 +4,10 @@ import Player from "./shared/Player"
 import PlayList from "./components/playlist/PlayList"
 import PlaylistDate from "./components/PlaylistDate"
 import SetPlaylistDate from "./shared/SetPlaylistDate"
-import {connect} from 'react-redux'
-import PropTypes from 'prop-types'
+// import {connect} from 'react-redux'
+// import PropTypes from 'prop-types'
 
-const  {ipcRenderer} = window.require('electron')
+const {ipcRenderer} = window.require('electron')
 
 
 class App extends Component {
@@ -24,12 +24,47 @@ class App extends Component {
         this.savePlaylist = this.savePlaylist.bind(this)
 
     }
-        showUploadMediaModal() {
+
+    showUploadMediaModal() {
         this.setState({showUploadMediaModal: true})
     }
 
     closeUploadMediaModal() {
         this.setState({showUploadMediaModal: false})
+    }
+    //start playing
+    startPlaying(playFrom,ctx) {
+
+        const existingPlaylist = Player.getPlayList()
+        // for (let i = playFrom; i < existingPlaylist.length; i++) {
+        if (playFrom >= existingPlaylist.length) {
+            playFrom = 0
+        }
+
+        ctx.props.files.map(file => {
+            ctx.props.updateFile({
+                id: file.id,
+                path: file.path,
+                name: file.name,
+                duration: file.duration,
+                isPlaying: playFrom + 1 === file.id,
+                played: playFrom + 1 === file.id ? true : file.played,
+                cover: file.cover,
+                startTime: file.startTime,
+            })
+        })
+        // console.log(existingPlaylist[playFrom])
+        document.getElementById('cover-image').src = existingPlaylist[playFrom].cover
+        document.getElementById('cover-image').hidden = false
+        document.getElementById('playing_song').innerText = existingPlaylist[playFrom].name
+        const audioPlayer = document.getElementById('audio_player')
+        audioPlayer.src = existingPlaylist[playFrom].path
+        audioPlayer.play()
+        // this.setState({isPlaying: true})
+        audioPlayer.addEventListener('ended', () => {
+            this.startPlaying(playFrom + 1,ctx)
+        })
+        // }
     }
 
     savePlaylist(e) {
@@ -39,6 +74,7 @@ class App extends Component {
         if (!date) {
             date = new Date().toISOString().split("T")[0]
         }
+        // console.log(Player.getPlayList())
         ipcRenderer.send('save-playlist', {
             date: date,
             playlist: Player.getPlayList()
@@ -108,7 +144,7 @@ class App extends Component {
                 <div className="container-fluid">
                     <div className="row flex-xl-nowrap">
                         <div className="col-12 col-md-2 bd-sidebar">
-                            <PlaylistDate/>
+                            <PlaylistDate startPlaying={this.startPlaying}/>
                             <div id="timer">
                                 <div><strong id="playback-time"></strong></div>
                                 <div id="clock">
@@ -126,13 +162,10 @@ class App extends Component {
                                     <button hidden={true} onClick={this.savePlaylist} className="btn btn-success btn-sm"
                                             id="save-playlist">Save Playlist
                                     </button>
-
                                 </div>
                                 <hr/>
                                 <div className="row flex-xl-nowrap">
-
-
-                                    <PlayList/>
+                                    <PlayList startPlaying={this.startPlaying}/>
                                 </div>
                             </div>
                         </div>
@@ -173,14 +206,15 @@ class App extends Component {
     }
 }
 
-App.propTypes = {
-    files: PropTypes.array,
-}
+// App.propTypes = {
+//     files: PropTypes.array,
+// }
 
-function mapStateToProps(state) {
-    return {
-        files: state.playlistReducers
-    }
-}
+// function mapStateToProps(state) {
+//     return {
+//         files: state.playlistReducers
+//     }
+// }
 
-export default connect(mapStateToProps, {})(App)
+export default App
+// export default connect(mapStateToProps, {})(App)

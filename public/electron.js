@@ -9,7 +9,7 @@ const isDev = require('electron-is-dev')
 const low = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
 
-const adapter = new FileSync('./public/media/db.json')
+const adapter = new FileSync('C:\\Users\\nahas\\AppData\\Local\\Programs\\test-react-electron-app\\public\\media\\db.json')
 const db = low(adapter)
 
 db.defaults({playlists: []})
