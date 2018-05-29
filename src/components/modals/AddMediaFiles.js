@@ -72,9 +72,9 @@ class AddMediaFiles extends React.Component {
                 audio.onloadedmetadata = () => {
                     const duration = secondsToHms(audio.duration)
                     let endTime = ''
-                    // const date = date
+
                     let date = SetPlaylistDate.getDate()
-                    //if date is not set assume today date
+
                     if (!date) {
                         date = new Date().toISOString().split("T")[0]
                     }
@@ -86,7 +86,7 @@ class AddMediaFiles extends React.Component {
                         startTime = JSON.parse(localStorage.getItem(date)).time
                     }
 
-                    // if (this.props.files.length > 0) {
+
                     this.props.addDuration({
                         name: acceptedFiles[i].name,
                         path: acceptedFiles[i].path,
@@ -99,16 +99,7 @@ class AddMediaFiles extends React.Component {
                         path: acceptedFiles[i].path,
                         duration: duration,
                     })
-                    // } else {
-                    //     this.props.addDuration({
-                    //         name: acceptedFiles[i].name,
-                    //         path: acceptedFiles[i].path,
-                    //         duration: duration,
-                    //         played: false,
-                    //         startTime: startTime ? startTime : '',
-                    //         isDuration: true
-                    //     })
-                    // }
+
 
                     if (localStorage.getItem(date)) {
                         let dateStore = JSON.parse(localStorage.getItem(date))

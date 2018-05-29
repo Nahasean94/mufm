@@ -4,7 +4,7 @@ import {isEmpty} from 'lodash'
 import TextFieldGroup from "../shared/TextFieldsGroup"
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-import {updateFile, clearFiles, addFile} from "../actions/playlistActions"
+import {updateFile, clearFiles, addFile, deleteFile} from "../actions/playlistActions"
 import {tConv12, addTimes, convert_to_24h,} from "../shared/TimeFunctions"
 import Player from '../shared/Player'
 import SetPlaylistDate from "../shared/SetPlaylistDate"
@@ -58,109 +58,49 @@ class PlaylistDate extends Component {
     onSelectDate(e) {
         e.preventDefault()
         if (this.isDateValid()) {
-
+            Player.emptyPlayList()
             this.props.clearFiles()
 
-            // console.log(this.props.files)
 //selected date is past
             if (Date.parse(new Date().toLocaleDateString()) > Date.parse(this.state.date)) {
+
                 document.getElementById('add-media').hidden = true
                 document.getElementById('save-playlist').hidden = true
-                Player.emptyPlayList()
                 this.setState({disableTime: true})
-                //populate the table with the day's playlist
                 ipcRenderer.send('get-playlist', this.state.date)
-                ipcRenderer.on('got-playlist', (event, playlist) => {
-                    //check is playlist exists
-                    if (playlist) {
-                        playlist.map(file => {
-                            this.props.addFile(file)
-                        })
-                    }
-                })
-                // if (localStorage.getItem(this.state.date)) {
-                //     const localStorageObject = JSON.parse(localStorage.getItem(this.state.date))
-                //     const playlist = localStorageObject.playlist
-                //     //check is playlist exists
-                //     if (playlist) {
-                //         playlist.map(file => {
-                //             console.log(file)
-                //             this.props.addFile(file)
-                //         })
-                //     }
-                // }
             }
             //selected date is future
             else if (Date.parse(new Date().toLocaleDateString()) < Date.parse(this.state.date)) {
-                Player.emptyPlayList()
-                this.props.clearFiles()
+
                 SetPlaylistDate.setDate(this.state.date)
                 document.getElementById('save-playlist').hidden = true
-                // document.getElementById('add-media').hidden = true
+                document.getElementById('add-media').hidden = false
+                this.setState({disableTime: false})
 
                 //check if date exists in localstorage, if not create an entry, if exists fetch the playlist
                 if (!localStorage.getItem(this.state.date)) {
                     localStorage.setItem(this.state.date, JSON.stringify({date: this.state.date}))
                 }
                 else {
-                    //populate the table with the day's playlist
-                    // const localStorageObject = JSON.parse(localStorage.getItem(this.state.date))
-                    // const playlist = localStorageObject.playlist
-                    // //check is playlist exists
-                    // if (playlist) {
-                    //     playlist.map(file => {
-                    //         this.props.addFile(file)
-                    //     })
-                    // }
-                    ipcRenderer.send('get-playlist', this.state.date)
-                    ipcRenderer.on('got-playlist', (event, playlist) => {
-                        //check is playlist exists
-                        if (playlist) {
-                            playlist.map(file => {
-                                this.props.addFile(file)
-                            })
-                        }
-                    })
+                     ipcRenderer.send('get-playlist', this.state.date)
                 }
             }
             //date is today
             else if (Date.parse(new Date().toLocaleDateString()) === Date.parse(this.state.date)) {
-                this.props.clearFiles()
+
                 SetPlaylistDate.setDate(this.state.date)
+                document.getElementById('add-media').hidden = false
+                this.setState({disableTime: false})
                 //check if date exists in localstorage, if not create an entry, if exists fetch the playlist
                 if (!localStorage.getItem(this.state.date)) {
                     localStorage.setItem(this.state.date, JSON.stringify({date: this.state.date}))
                 }
                 else {
-                    // const localStorageObject = JSON.parse(localStorage.getItem(this.state.date))
-                    // const playlist = localStorageObject.playlist
-                    // //check is playlist exists
-                    // if (playlist) {
-                    //     playlist.map(file => {
-                    //         this.props.addFile(file)
-                    //     })
-                    // }
-                    this.props.clearFiles()
                     ipcRenderer.send('get-playlist', this.state.date)
-                    ipcRenderer.on('got-playlist', (event, playlist) => {
-                        //check is playlist exists
-                        if (playlist) {
-                            playlist.map(file => {
-                                this.props.addFile(file)
-                            })
-                        }
-                    })
                 }
 
             }
         }
-
-//             else{
-//                 let todayItem=JSON.parse(localStorage.getItem(todayDatetodayItem,
-//     date:
-// }
-//         }
-        // }
         this.setState({timelineDate: this.state.date, time: '', date: '', errors: {}, isLoading: true})
     }
 
@@ -177,9 +117,6 @@ class PlaylistDate extends Component {
             if (parseInt(setTime.replace(regex, ''), 10) < parseInt(timeNow.replace(regex, ''), 10)) {
                 errors.time = "Start time cannot be in the past"
             }
-            // else {
-            //     console.log('timeStr2 is smaller then timeStr1');
-            // }
         }
 
         return {
@@ -226,12 +163,7 @@ class PlaylistDate extends Component {
                     localStorage.setItem(this.state.date, JSON.stringify(todayItem))
                 }
             }
-            // else if (!localStorage.getItem(todayDate)) {
-            //     localStorage.setItem(todayDate, JSON.stringify({
-            //         date: todayDate,
-            //         time: this.state.time + ":00"
-            //     }))
-            // }
+
             else {
                 console.log("today's date is not in state")
                 let todayItem = JSON.parse(localStorage.getItem(this.state.date))
@@ -251,7 +183,7 @@ class PlaylistDate extends Component {
                     duration: file.duration,
                     played: file.played,
                     startTime: timer,
-                    cover:file.cover
+                    cover: file.cover
                 })
                 timer = addTimes((timer).split(" ")[0], file.duration)
                 let todayItem = JSON.parse(localStorage.getItem(todayDate))
@@ -262,17 +194,7 @@ class PlaylistDate extends Component {
                 }
                 localStorage.setItem(todayDate, JSON.stringify(todayItem))
             })
-            //Start playing when the time reaches
-            // setInterval(function () {
-            //     let currentTime = new Date().toLocaleTimeString()
-            //     if (currentTime.match(/am|pm/i) || currentTime.toString().match(/am|pm/i)) {
-            //         currentTime = convert_to_24h(currentTime)
-            //     }
-            //     if (currentTime === JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).time + ":00") {
-            //         Player.startPlaying(0)
-            //     }
-            // }, 1000)
-            //show the timer to playback start time
+
             const stopwatch = setInterval(() => {
                 const playTime = this.state.time + ":00"
                 let countDownDate = new Date(`${new Date().toISOString().split("T")[0]} ${playTime}`).getTime()
@@ -310,7 +232,7 @@ class PlaylistDate extends Component {
                     document.getElementById('playback-time').innerText = ""
                     document.getElementById("clock").innerText = ""
                     clearInterval(stopwatch)
-                    this.props.startPlaying(0,this)
+                    this.props.startPlaying(0, this)
                 }
             }, 1000)
 
@@ -376,6 +298,7 @@ PlaylistDate.propTypes = {
     startPlaying: PropTypes.func.isRequired,
     clearFiles: PropTypes.func.isRequired,
     addFile: PropTypes.func.isRequired,
+    deleteFile: PropTypes.func.isRequired,
 }
 
 function mapStateToProps(state) {
@@ -384,4 +307,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps, {updateFile, clearFiles, addFile})(PlaylistDate)
+export default connect(mapStateToProps, {updateFile, clearFiles, addFile, deleteFile})(PlaylistDate)

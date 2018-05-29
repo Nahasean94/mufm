@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import {addFile, deleteFile, clearFiles, updateFile} from "../../actions/playlistActions"
 import PlayListItem from "./PlayListItem"
 import Sortable from "sortablejs"
-import {addTimes, secondsToHms} from "../../shared/TimeFunctions"
+import {addTimes,  } from "../../shared/TimeFunctions"
 import SetPlaylistDate from "../../shared/SetPlaylistDate"
 
 const {ipcRenderer} = window.require('electron')
@@ -13,15 +13,16 @@ const {ipcRenderer} = window.require('electron')
 class PlayList extends React.Component {
     constructor(props) {
         super(props)
-        // this.props.files.map(file => this.props.addFile(file))
-        this.onDrop = this.onDrop.bind(this)
+        this.props.files.map(file => this.props.addFile(file))
+
 
 
 //populate the table with the day's playlist
         ipcRenderer.send('get-playlist', new Date().toISOString().split("T")[0])
         ipcRenderer.on('got-playlist', (event, playlist) => {
+            console.log("event listened")
             //check is playlist exists
-            if (playlist) {
+            if (playlist.length>0) {
                 let date = SetPlaylistDate.getDate()
                 //if date is not set assume today date
                 if (!date) {
@@ -60,8 +61,6 @@ class PlayList extends React.Component {
                 })
             }
         })
-
-
     }
 
     startTimer() {
@@ -123,34 +122,6 @@ class PlayList extends React.Component {
         })
     }
 
-    onDrop(e) {
-// console.log(document.getElementById('playlist').childNodes)
-        //TODO  allow sorting of future playlists
-        //
-        // let startTime = localStorage.getItem(new Date().toISOString().split("T")[0]) ? JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).time ? tConv12(JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).time) : '' : ''
-        // let todayDate=new Date().toISOString().split("T")[0]
-        // if (startTime) {
-        //     let timer = startTime
-        //     this.props.files.map(file => {
-        //         this.props.updateFile({
-        //             id: file.id,
-        //             path: file.path,
-        //             name: file.name,
-        //             duration: file.duration,
-        //             played: file.played,
-        //             startTime: timer
-        //         })
-        //         timer = addTimes((timer).split(" ")[0], file.duration)
-        //         let todayItem = JSON.parse(localStorage.getItem(todayDate))
-        //         todayItem = {
-        //             date: todayItem.date,
-        //             time: todayItem.time,
-        //             endTime: timer
-        //         }
-        //         localStorage.setItem(todayDate, JSON.stringify(todayItem))
-        //     })
-        // }
-    }
 
     render() {
         let count = 1
@@ -160,7 +131,7 @@ class PlayList extends React.Component {
                 <table className="table table-sm table-hover table-borderless">
                     <thead>
                     <tr>
-                        {/*<th scope="col">#</th>*/}
+
                         <th scope="col">Cover</th>
                         <th scope="col">Name</th>
                         <th scope="col">Start Time</th>

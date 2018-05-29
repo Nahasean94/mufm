@@ -6,8 +6,8 @@ export default (state = [], action) => {
         case ADD_FILE:
             return [...state, action.payload]
         case CLEAR_FILES:
-            state.length=0
-            return state
+
+           return []
         case UPDATE_FILE:
             return state.map(file => {
                 if (file.id === action.payload.id) {

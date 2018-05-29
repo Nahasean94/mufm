@@ -12,9 +12,9 @@ class Player {
     }
 
     emptyPlayList() {
-        for (let i = 0; i < this.playlist; i++) {
-            this.playlist.pop()
-        }
+
+       this.playlist.length=0
+
     }
 
     removeSong(id) {
@@ -66,14 +66,7 @@ class Player {
         const audio = new Audio()
         audio.controls = true
         audio.id = "audio_player"
-        // audio.onended=()=>{
-        //     // const nextFile=this.props.getFile(this.props.id)
-        //     // document.getElementById('playing_song').innerText = nextFile.filename
-        //     // const audioPlayer = document.getElementById('audio_player')
-        //     // audioPlayer.src = nextFile.path
-        //     // audioPlayer.play()
-        //     PlayListItem.playNext()
-        // }
+
 // Establish all variables that your Analyser will use
         let canvas, ctx, source, context, analyser, fbc_array, bars, bar_x, bar_width, bar_height
 // Initialize the MP3 player after the page loads all of its HTML into the window
@@ -113,12 +106,9 @@ class Player {
 
 }
 
-// Player.propTypes = {
-//     updateFile: PropTypes.func.isRequired,
-// }
+
 
 const instance = new Player()
 Object.freeze(instance)
 
-// connect(null, {updateFile})(instance)
 export default instance

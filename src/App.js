@@ -4,8 +4,7 @@ import Player from "./shared/Player"
 import PlayList from "./components/playlist/PlayList"
 import PlaylistDate from "./components/PlaylistDate"
 import SetPlaylistDate from "./shared/SetPlaylistDate"
-// import {connect} from 'react-redux'
-// import PropTypes from 'prop-types'
+
 
 const {ipcRenderer} = window.require('electron')
 
@@ -74,39 +73,15 @@ class App extends Component {
         if (!date) {
             date = new Date().toISOString().split("T")[0]
         }
-        // console.log(Player.getPlayList())
+        const playlist= Player.getPlayList()
+        playlist.map(file=>{
         ipcRenderer.send('save-playlist', {
-            date: date,
-            playlist: Player.getPlayList()
+            ...file,
+            date:date
+        })
         })
 
-        //check if date exists in localstorage, if not create an entry, else update the entry
-        // const file = `/media/${date}.json`
-        // fs.readdirSync(__dirname).forEach(file => {
-        //     console.log(file);
-        // })
-        // jsonfile.writeFile(file, {
-        //     date: date,
-        //     playlist: Player.getPlayList()
-        // }, err=> {
-        //     console.error(err)
-        // })
 
-
-        // if (!localStorage.getItem(date)) {
-        //     localStorage.setItem(date, JSON.stringify({
-        //         date: date,
-        //         playlist: Player.getPlayList()
-        //     }))
-        // }
-        // else {
-        //     let todayItem = JSON.parse(localStorage.getItem(date))
-        //     todayItem = {
-        //         date: todayItem.date,
-        //         playlist: this.props.files
-        //     }
-        //     localStorage.setItem(date, JSON.stringify(todayItem))
-        // }
         document.getElementById('save-playlist').hidden = true
 
     }
@@ -119,15 +94,6 @@ class App extends Component {
                 duration: acceptedFiles[i].duration
             })
 
-            //     const reader = new FileReader()
-            //     reader.onload = () => {
-            //         const fileAsBinaryString = reader.result
-            //       console.log(fileAsBinaryString)
-            //     }
-            //     reader.onabort = () => console.log('file reading was aborted')
-            //     reader.onerror = () => console.log('file reading has failed')
-            //
-            //     reader.readAsBinaryString(file)
         }
         this.closeUploadMediaModal()
     }
@@ -206,15 +172,7 @@ class App extends Component {
     }
 }
 
-// App.propTypes = {
-//     files: PropTypes.array,
-// }
 
-// function mapStateToProps(state) {
-//     return {
-//         files: state.playlistReducers
-//     }
-// }
 
 export default App
-// export default connect(mapStateToProps, {})(App)
+

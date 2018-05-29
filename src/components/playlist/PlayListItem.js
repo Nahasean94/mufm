@@ -11,7 +11,7 @@ class PlayListItem extends React.Component {
         super(props)
         this.state = {
             ...this.props,
-            // isPlaying: false,
+
         }
         this.play = this.play.bind(this)
         Player.addToPlayList({
@@ -23,7 +23,7 @@ class PlayListItem extends React.Component {
             cover: this.props.cover
         })
         this.onDeleteFile = this.onDeleteFile.bind(this)
-        // this.onDragOver = this.onDragOver.bind(this)
+
     }
 
     play(e) {
@@ -32,7 +32,7 @@ class PlayListItem extends React.Component {
 
     startPlaying(playFrom) {
         const existingPlaylist = Player.getPlayList()
-        // for (let i = playFrom; i < existingPlaylist.length; i++) {
+
         if (playFrom >= existingPlaylist.length) {
             playFrom = 0
         }
@@ -48,7 +48,7 @@ class PlayListItem extends React.Component {
                 startTime: file.startTime,
             })
         })
-        // console.log(existingPlaylist[playFrom])
+
         document.getElementById('cover-image').src = existingPlaylist[playFrom].cover
         document.getElementById('cover-image').hidden = false
         document.getElementById('playing_song').innerText = existingPlaylist[playFrom].name
@@ -59,7 +59,7 @@ class PlayListItem extends React.Component {
         audioPlayer.addEventListener('ended', () => {
             this.startPlaying(playFrom + 1)
         })
-        // }
+
     }
 
     onDeleteFile(e) {
@@ -114,7 +114,7 @@ class PlayListItem extends React.Component {
         }
         return (
             <tr className={classnames({"table-success": isPlaying}, {"table-secondary": played},)}>
-                {/*<td>{count}</td>*/}
+
                 <td><img src={cover} width="20" height="20"/></td>
                 <td onDoubleClick={this.play} id={id}>{name}</td>
                 <td>{startTime}</td>

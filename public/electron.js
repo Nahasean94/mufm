@@ -3,17 +3,13 @@ const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 const ipc = require('electron').ipcMain
 const path = require('path')
-const url = require('url')
+
 const isDev = require('electron-is-dev')
 
-const low = require('lowdb')
-const FileSync = require('lowdb/adapters/FileSync')
 
-const adapter = new FileSync('C:\\Users\\nahas\\AppData\\Local\\Programs\\test-react-electron-app\\public\\media\\db.json')
-const db = low(adapter)
+const Datastore = require('nedb')
+db = new Datastore({filename:'C:\\Users\\nahas\\AppData\\Local\\Programs\\test-react-electron-app\\public\\media\\db.db',autoload:true })
 
-db.defaults({playlists: []})
-    .write()
 
 let mainWindow
 
@@ -43,22 +39,14 @@ app.on('activate', () => {
 
 
 ipc.on('save-playlist', (event, arg) => {
-    //check if an entry with that date exists
-    if (db.get('playlists')
-        .find({date: arg.date}).write()) {
-//if it exists, update it
-        db.get('playlists')
-            .find({date: arg.date}).assign({playlist: arg.playlist}).write()
-    } else {
-        db.get('playlists').push(arg).write()
-    }
-    // event.sender.send('asynchronous-reply', 'pong')
+    db.insert(arg, function (err, newDoc) {   // Callback is optional
+        event.sender.send('saved-file', newDoc)
+
+    })
+
 })
 ipc.on('get-playlist', (event, arg) => {
-    const entry = db.get('playlists')
-        .find({date: arg}).write()
-    if (entry) {
-        const playlist = entry.playlist
-        event.sender.send('got-playlist', playlist)
-    }
+       db.find({date: arg}, function (err, docs) {
+        event.sender.send('got-playlist', docs)
+    })
 })
