@@ -24,8 +24,8 @@ class AddMediaFiles extends React.Component {
     onDrop(acceptedFiles) {
         if (acceptedFiles.length > 0) {
             this.props.onClose()
-            document.getElementById('progress-bar').hidden=false
-            document.getElementById('processing').innerText="Processing metadata. Please wait..."
+            document.getElementById('progress-bar').hidden = false
+            document.getElementById('processing').innerText = "Processing metadata. Please wait..."
 
             let id = this.props.files.length + 1
             for (let i = 0; i < acceptedFiles.length; i++) {
@@ -80,12 +80,12 @@ class AddMediaFiles extends React.Component {
                     if (!date) {
                         date = new Date().toISOString().split("T")[0]
                     }
+                    let startTime = ''
                     if (localStorage.getItem(date)) {
                         endTime = JSON.parse(localStorage.getItem(date)).endTime
-                    }
-                    let startTime = ''
-                    if (JSON.parse(localStorage.getItem(date))) {
-                        startTime = JSON.parse(localStorage.getItem(date)).time
+                        if (JSON.parse(localStorage.getItem(date))) {
+                            startTime = JSON.parse(localStorage.getItem(date)).time
+                        }
                     }
 
 
@@ -105,63 +105,78 @@ class AddMediaFiles extends React.Component {
 
                     if (localStorage.getItem(date)) {
                         let dateStore = JSON.parse(localStorage.getItem(date))
-                        dateStore = {
-                            date: dateStore.date,
-                            time: dateStore.time,
-                            endTime: addTimes(endTime ? endTime : startTime, duration)
+                        if (dateStore.time) {
+                            dateStore = {
+                                date: dateStore.date,
+                                time: dateStore.time,
+                                endTime: endTime ? addTimes(endTime, duration) : startTime ? addTimes(startTime, duration) : ''
+                            }
+                            localStorage.setItem(date, JSON.stringify(dateStore))
                         }
-                        localStorage.setItem(date, JSON.stringify(dateStore))
                     }
-                    document.getElementById('processing').value=(i/(acceptedFiles.length-1))*100
-                    if(i===acceptedFiles.length-1){
-                        document.getElementById('save-playlist').hidden = false
-                        document.getElementById('progress-bar').hidden=true
+                        document.getElementById('processing').value = (i / (acceptedFiles.length - 1)) * 100
+                        if (i === acceptedFiles.length - 1) {
+                            document.getElementById('save-playlist').hidden = false
+                            document.getElementById('progress-bar').hidden = true
+                        }
                     }
                 }
             }
+
         }
 
-    }
-
-    onDropRejected(...args) {
-        console.log('reject', args)
-    }
-
-    render() {
-
-        const {show, onClose,} = this.props
-        if (show) {
-            return (
-                <Modal isOpen={show} toggle={onClose} size="sm">
-                    <ModalHeader toggle={onClose}>Add media files</ModalHeader>
-                    <ModalBody>
-                        <Dropzone onDrop={this.onDrop} accept="audio/*,video/*" multiple={true}
-                                  onDropRejected={this.onDropRejected}>
-                            Drag file(s) here or click to upload.
-                        </Dropzone>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color="dark btn-sm" onClick={onClose}>Cancel</Button>{' '}
-                    </ModalFooter>
-                </Modal>
-            )
+        onDropRejected(...args)
+        {
+            console.log('reject', args)
         }
-        else return null
 
+        render()
+        {
+
+            const {show, onClose,} = this.props
+            if (show) {
+                return (
+                    <Modal isOpen={show} toggle={onClose} size="sm">
+                        <ModalHeader toggle={onClose}>Add media files</ModalHeader>
+                        <ModalBody>
+                            <Dropzone onDrop={this.onDrop} accept="audio/*,video/*" multiple={true}
+                                      onDropRejected={this.onDropRejected}>
+                                Drag file(s) here or click to upload.
+                            </Dropzone>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="dark btn-sm" onClick={onClose}>Cancel</Button>{' '}
+                        </ModalFooter>
+                    </Modal>
+                )
+            }
+            else return null
+
+        }
     }
-}
 
-AddMediaFiles.propTypes = {
-    addFile: PropTypes.func.isRequired,
-    show: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
-    addDuration: PropTypes.func.isRequired,
-    addCover: PropTypes.func.isRequired,
-    files: PropTypes.array,
-}
+    AddMediaFiles
+.
+    propTypes = {
+        addFile: PropTypes.func.isRequired,
+        show: PropTypes.bool.isRequired,
+        onClose: PropTypes.func.isRequired,
+        addDuration: PropTypes.func.isRequired,
+        addCover: PropTypes.func.isRequired,
+        files: PropTypes.array,
+    }
 
-function mapStateToProps(state) {
-    return {files: state.playlistReducers}
-}
+    function
 
-export default connect(mapStateToProps, {addFile, addDuration, addCover})(AddMediaFiles)
+    mapStateToProps(state) {
+        return {files: state.playlistReducers}
+    }
+
+    export
+    default
+
+    connect(mapStateToProps, {addFile, addDuration, addCover})
+
+(
+    AddMediaFiles
+)

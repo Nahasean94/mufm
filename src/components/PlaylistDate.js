@@ -39,7 +39,7 @@ class PlaylistDate extends Component {
     validateDate(data) {
         let errors = {}
 
-        if (data.date==='') {
+        if (data.date === '') {
             errors.date = 'This field is required'
         }
         return {
@@ -51,7 +51,7 @@ class PlaylistDate extends Component {
     isDateValid() {
         const {errors, isValid} = this.validateDate(this.state)
         if (!isValid) {
-            console.log(errors)
+
             this.setState({errors})
         }
         return isValid
@@ -65,7 +65,6 @@ class PlaylistDate extends Component {
 
 //selected date is past
             if (Date.parse(new Date().toLocaleDateString()) > Date.parse(this.state.date)) {
-
                 document.getElementById('add-media').hidden = true
                 document.getElementById('save-playlist').hidden = true
                 this.setState({disableTime: true})
@@ -73,7 +72,6 @@ class PlaylistDate extends Component {
             }
             //selected date is future
             else if (Date.parse(new Date().toLocaleDateString()) < Date.parse(this.state.date)) {
-
                 SetPlaylistDate.setDate(this.state.date)
                 document.getElementById('save-playlist').hidden = true
                 document.getElementById('add-media').hidden = false
@@ -83,9 +81,9 @@ class PlaylistDate extends Component {
                 if (!localStorage.getItem(this.state.date)) {
                     localStorage.setItem(this.state.date, JSON.stringify({date: this.state.date}))
                 }
-                else {
-                     ipcRenderer.send('get-playlist', this.state.date)
-                }
+
+                ipcRenderer.send('get-playlist', this.state.date)
+
             }
             //date is today
             else if (Date.parse(new Date().toLocaleDateString()) === Date.parse(this.state.date)) {
@@ -97,9 +95,9 @@ class PlaylistDate extends Component {
                 if (!localStorage.getItem(this.state.date)) {
                     localStorage.setItem(this.state.date, JSON.stringify({date: this.state.date}))
                 }
-                else {
-                    ipcRenderer.send('get-playlist', this.state.date)
-                }
+
+                ipcRenderer.send('get-playlist', this.state.date)
+
 
             }
         }
@@ -111,14 +109,27 @@ class PlaylistDate extends Component {
         if (validator.isEmpty(data.time)) {
             errors.time = 'This field is required'
         }
-        if (!this.state.date) {
+        let date = SetPlaylistDate.getDate()
+        //if date is not set assume today date
+        if (!date) {
+            date = new Date().toISOString().split("T")[0]
+        }
+        const playTime = this.state.time + ":00"
+        let countDownDate = new Date(`${date} ${playTime}`).getTime()
 
-            const regex = new RegExp(':', 'g'),
-                setTime = this.state.time + ":00",
-                timeNow = convert_to_24h(new Date().toLocaleTimeString())
-            if (parseInt(setTime.replace(regex, ''), 10) < parseInt(timeNow.replace(regex, ''), 10)) {
-                errors.time = "Start time cannot be in the past"
-            }
+//  Get todays date and time
+        let now = new Date().getTime()
+
+        // Find the distance between now an the count down date
+        let distance = countDownDate - now
+        if (distance < 0) {
+
+            // const regex = new RegExp(':', 'g'),
+            //     setTime = this.state.time + ":00",
+            //     timeNow = convert_to_24h(new Date().toLocaleTimeString())
+            // if (parseInt(setTime.replace(regex, ''), 10) < parseInt(timeNow.replace(regex, ''), 10)) {
+            errors.time = "Start time cannot be in the past"
+            // }
         }
 
         return {
@@ -148,8 +159,8 @@ class PlaylistDate extends Component {
                 startTime: this.state.time,
             })
             const todayDate = new Date().toISOString().split("T")[0]
-            if (!this.state.date) {
-
+            let date = SetPlaylistDate.getDate()
+            if (!date) {
                 if (!localStorage.getItem(todayDate)) {
                     localStorage.setItem(todayDate, JSON.stringify({
                         date: todayDate,
@@ -167,16 +178,18 @@ class PlaylistDate extends Component {
             }
 
             else {
-                console.log("today's date is not in state")
-                let todayItem = JSON.parse(localStorage.getItem(this.state.date))
-                todayItem = {
-                    date: todayItem.date,
 
+                let dateItem = JSON.parse(localStorage.getItem(date))
+                dateItem = {
+                    date: dateItem.date,
                     time: this.state.time + ":00"
                 }
-                localStorage.setItem(this.state.date, JSON.stringify(todayItem))
+                localStorage.setItem(date, JSON.stringify(dateItem))
             }
 
+            if (!date) {
+                date = todayDate
+            }
             this.props.files.map(file => {
                 this.props.updateFile({
                     id: file.id,
@@ -188,18 +201,19 @@ class PlaylistDate extends Component {
                     cover: file.cover
                 })
                 timer = addTimes((timer).split(" ")[0], file.duration)
-                let todayItem = JSON.parse(localStorage.getItem(todayDate))
+                let todayItem = JSON.parse(localStorage.getItem(date))
                 todayItem = {
                     date: todayItem.date,
                     time: todayItem.time,
                     endTime: timer
                 }
-                localStorage.setItem(todayDate, JSON.stringify(todayItem))
+                localStorage.setItem(date, JSON.stringify(todayItem))
             })
 
             const stopwatch = setInterval(() => {
                 const playTime = this.state.time + ":00"
-                let countDownDate = new Date(`${new Date().toISOString().split("T")[0]} ${playTime}`).getTime()
+
+                let countDownDate = new Date(`${date} ${playTime}`).getTime()
 
 //                     Get todays date and time
                 let now = new Date().getTime()

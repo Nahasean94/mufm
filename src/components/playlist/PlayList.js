@@ -37,29 +37,30 @@ class PlayList extends React.Component {
                     this.startTimer()
                 }
 
-             document.getElementById('progress-bar').hidden=false
-                console.log( document.getElementById('progress-bar'))
+                document.getElementById('progress-bar').hidden = false
+
                 document.getElementById('processing').innerText = "Processing metadata. Please wait..."
                 let count = 0
                 playlist.map(file => {
-                    console.log(file._id)
                     const duration = file.duration
                     let endTime = ''
                     if (localStorage.getItem(date)) {
                         endTime = JSON.parse(localStorage.getItem(date)).endTime
                     }
-                    let startTime = ''
-                    if (JSON.parse(localStorage.getItem(date))) {
-                        startTime = JSON.parse(localStorage.getItem(date)).time
-                    }
+                    // let startTime = ''
+                    // if (JSON.parse(localStorage.getItem(date))) {
+                    //     startTime = JSON.parse(localStorage.getItem(date)).time
+                    // }
                     file.startTime = endTime ? endTime : startTime ? startTime : ''
                     this.props.addFile(file)
                     if (localStorage.getItem(date)) {
                         let dateStore = JSON.parse(localStorage.getItem(date))
+                        if(dateStore.time){
                         dateStore = {
                             date: dateStore.date,
                             time: dateStore.time,
-                            endTime: addTimes(endTime ? endTime : startTime, duration)
+                            endTime: endTime ? addTimes(endTime, duration) : startTime ? addTimes(startTime, duration) : ''
+                        }
                         }
                         localStorage.setItem(date, JSON.stringify(dateStore))
                     }
@@ -82,14 +83,14 @@ class PlayList extends React.Component {
                 date = new Date().toISOString().split("T")[0]
             }
             const playTime = JSON.parse(localStorage.getItem(date)).time
-            let countDownDate = new Date(`${new Date().toISOString().split("T")[0]} ${playTime}`).getTime()
+            let countDownDate = new Date(`${date} ${playTime}`).getTime()
 
 //                     Get todays date and time
             let now = new Date().getTime()
 
             // Find the distance between now an the count down date
             let distance = countDownDate - now
-            console.log(distance)
+
 
             // Time calculations for days, hours, minutes and seconds
             let days = Math.floor(distance / (1000 * 60 * 60 * 24))
@@ -152,8 +153,7 @@ class PlayList extends React.Component {
                     </thead>
                     <tbody id="playlist">
                     {this.props.files.map((file, i) => {
-                        console.log(file)
-                                                return <PlayListItem key={i} name={file.name} duration={file.duration} id={file.id}
+                        return <PlayListItem key={i} name={file.name} duration={file.duration} id={file.id}
                                              path={file.path} played={file.played}
                                              isPlaying={file.isPlaying}
                                              startTime={file.startTime ? file.startTime : ''} cover={file.cover}

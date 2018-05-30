@@ -8,7 +8,10 @@ const isDev = require('electron-is-dev')
 
 
 const Datastore = require('nedb')
-db = new Datastore({filename:'C:\\Users\\nahas\\AppData\\Local\\Programs\\test-react-electron-app\\public\\media\\db.db',autoload:true })
+db = new Datastore({
+    filename: 'C:\\Users\\nahas\\AppData\\Local\\Programs\\test-react-electron-app\\public\\media\\db.db',
+    autoload: true
+})
 
 
 let mainWindow
@@ -45,12 +48,15 @@ ipc.on('save-playlist', (event, arg) => {
 
 })
 ipc.on('get-playlist', (event, arg) => {
-       db.find({date: arg}, function (err, docs) {
-        event.sender.send('got-playlist', docs)
+    const docs = db.find({date: arg}).sort({id: 1}).exec((err,docs)=>{
+
+    console.log(docs)
+    event.sender.send('got-playlist', docs)
     })
+
 })
 ipc.on('delete-file', (event, arg) => {
-       db.remove({id: arg}, function (err, docs) {
+    db.remove({id: arg}, function (err, docs) {
         event.sender.send('deleted', docs)
     })
 })
