@@ -130,7 +130,6 @@ class PlayListItem extends React.Component {
         if (!cover) {
             cover = 'media/mp3.png'
         }
-        console.log(name)
         return (
             <tr className={classnames({"table-success": isPlaying}, {"table-secondary": played},)}>
 

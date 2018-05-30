@@ -48,9 +48,7 @@ ipc.on('save-playlist', (event, arg) => {
 
 })
 ipc.on('get-playlist', (event, arg) => {
-    const docs = db.find({date: arg}).sort({id: 1}).exec((err,docs)=>{
-
-    console.log(docs)
+     db.find({date: arg}).sort({id: 1}).exec((err,docs)=>{
     event.sender.send('got-playlist', docs)
     })
 

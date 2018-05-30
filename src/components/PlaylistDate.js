@@ -81,12 +81,14 @@ class PlaylistDate extends Component {
                 if (!localStorage.getItem(this.state.date)) {
                     localStorage.setItem(this.state.date, JSON.stringify({date: this.state.date}))
                 }
+                console.log("State date is", this.state.date)
 
                 ipcRenderer.send('get-playlist', this.state.date)
 
             }
             //date is today
             else if (Date.parse(new Date().toLocaleDateString()) === Date.parse(this.state.date)) {
+
 
                 SetPlaylistDate.setDate(this.state.date)
                 document.getElementById('add-media').hidden = false
@@ -123,13 +125,7 @@ class PlaylistDate extends Component {
         // Find the distance between now an the count down date
         let distance = countDownDate - now
         if (distance < 0) {
-
-            // const regex = new RegExp(':', 'g'),
-            //     setTime = this.state.time + ":00",
-            //     timeNow = convert_to_24h(new Date().toLocaleTimeString())
-            // if (parseInt(setTime.replace(regex, ''), 10) < parseInt(timeNow.replace(regex, ''), 10)) {
             errors.time = "Start time cannot be in the past"
-            // }
         }
 
         return {
@@ -248,7 +244,10 @@ class PlaylistDate extends Component {
                     document.getElementById('playback-time').innerText = ""
                     document.getElementById("clock").innerText = ""
                     clearInterval(stopwatch)
-                    this.props.startPlaying(0, this)
+                    if(Player.getPlayList().length>0){
+                        console.log(Player.getPlayList())
+                        this.props.startPlaying(0, this)
+                    }
                 }
             }, 1000)
 

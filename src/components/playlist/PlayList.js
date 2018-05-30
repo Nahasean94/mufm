@@ -23,12 +23,14 @@ class PlayList extends React.Component {
             this.props.clearFiles()
             Player.emptyPlayList()
             //check is playlist exists
+
             if (playlist.length > 0) {
                 let date = SetPlaylistDate.getDate()
                 //if date is not set assume today date
                 if (!date) {
                     date = new Date().toISOString().split("T")[0]
                 }
+
                 let startTime = ''
                 if (JSON.parse(localStorage.getItem(date))) {
                     startTime = JSON.parse(localStorage.getItem(date)).time
@@ -118,7 +120,11 @@ class PlayList extends React.Component {
                 document.getElementById('playback-time').innerText = ""
                 document.getElementById("clock").innerText = ""
                 clearInterval(stopwatch)
+                if(Player.getPlayList().length>0){
+                    console.log(Player.getPlayList())
                 this.props.startPlaying(0, this)
+
+                }
             }
         }, 1000)
     }
