@@ -6,16 +6,19 @@ import {updateFile, deleteFile} from '../../actions/playlistActions'
 import Player from '../../shared/Player'
 import {addTimes} from "../../shared/TimeFunctions"
 
+const {ipcRenderer} = window.require('electron')
+
 class PlayListItem extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            ...this.props,
+            // ...this.props,
 
         }
         this.play = this.play.bind(this)
         Player.addToPlayList({
             id: this.props.id,
+            _id: this.props._id,
             path: this.props.path,
             name: this.props.name,
             duration: this.props.duration,
@@ -65,46 +68,50 @@ class PlayListItem extends React.Component {
     onDeleteFile(e) {
         e.preventDefault()
         this.props.deleteFile(this.props.id)
-        Player.removeSong(this.props.id)
-        document.getElementById('save-playlist').hidden = false
-        let startTime = localStorage.getItem(new Date().toISOString().split("T")[0]) ? JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).time ? JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).time : '' : ''
-        let todayDate = new Date().toISOString().split("T")[0]
-        if (startTime) {
-            let timer = startTime
-            this.props.files.map((file, count) => {
-                if (file.id !== this.props.id) {
-                    this.props.updateFile({
-                        id: file.id,
-                        path: file.path,
-                        name: file.name,
-                        duration: file.duration,
-                        played: file.played,
-                        cover: file.cover,
-                        startTime: timer
-                    })
+        ipcRenderer.send('delete-file', this.props.id)
+        ipcRenderer.on('deleted', (err, arg) => {
+            Player.removeSong(this.props.id)
+            // document.getElementById('save-playlist').hidden = false
+            let startTime = localStorage.getItem(new Date().toISOString().split("T")[0]) ? JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).time ? JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).time : '' : ''
+            let todayDate = new Date().toISOString().split("T")[0]
+            if (startTime) {
+                let timer = startTime
+                this.props.files.map((file, count) => {
+                    if (file.id !== this.props.id) {
+                        this.props.updateFile({
+                            id: file.id,
+                            path: file.path,
+                            name: file.name,
+                            duration: file.duration,
+                            played: file.played,
+                            cover: file.cover,
+                            startTime: timer
+                        })
 
-                    timer = addTimes((timer).split(" ")[0], file.duration)
-                    let todayItem = JSON.parse(localStorage.getItem(todayDate))
-                    todayItem = {
-                        date: todayItem.date,
-                        time: todayItem.time,
-                        endTime: timer
-                    }
-                    localStorage.setItem(todayDate, JSON.stringify(todayItem))
-                    if (count === this.props.files.length) {
-                        let finalItem = JSON.parse(localStorage.getItem(todayDate))
-                        finalItem = {
-                            date: finalItem.date,
-                            time: finalItem.time,
+                        timer = addTimes((timer).split(" ")[0], file.duration)
+                        let todayItem = JSON.parse(localStorage.getItem(todayDate))
+                        todayItem = {
+                            date: todayItem.date,
+                            time: todayItem.time,
                             endTime: timer
                         }
-                        localStorage.setItem(todayDate, JSON.stringify(finalItem))
+                        localStorage.setItem(todayDate, JSON.stringify(todayItem))
+                        if (count === this.props.files.length) {
+                            let finalItem = JSON.parse(localStorage.getItem(todayDate))
+                            finalItem = {
+                                date: finalItem.date,
+                                time: finalItem.time,
+                                endTime: timer
+                            }
+                            localStorage.setItem(todayDate, JSON.stringify(finalItem))
+                        }
                     }
-                }
-            })
-        }
+                })
+            }
+        })
 
     }
+
 
     render() {
         const {name, isPlaying, id, duration, played, startTime} = this.props
@@ -139,7 +146,8 @@ PlayListItem.propTypes = {
     startTime: PropTypes.string.isRequired,
     cover: PropTypes.string,
     files: PropTypes.array.isRequired,
-    isPlaying: PropTypes.bool
+    isPlaying: PropTypes.bool,
+    _id:PropTypes.string,
 
 }
 

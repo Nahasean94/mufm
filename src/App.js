@@ -31,8 +31,9 @@ class App extends Component {
     closeUploadMediaModal() {
         this.setState({showUploadMediaModal: false})
     }
+
     //start playing
-    startPlaying(playFrom,ctx) {
+    startPlaying(playFrom, ctx) {
 
         const existingPlaylist = Player.getPlayList()
         // for (let i = playFrom; i < existingPlaylist.length; i++) {
@@ -61,7 +62,7 @@ class App extends Component {
         audioPlayer.play()
         // this.setState({isPlaying: true})
         audioPlayer.addEventListener('ended', () => {
-            this.startPlaying(playFrom + 1,ctx)
+            this.startPlaying(playFrom + 1, ctx)
         })
         // }
     }
@@ -73,12 +74,16 @@ class App extends Component {
         if (!date) {
             date = new Date().toISOString().split("T")[0]
         }
-        const playlist= Player.getPlayList()
-        playlist.map(file=>{
-        ipcRenderer.send('save-playlist', {
-            ...file,
-            date:date
-        })
+        const playlist = Player.getPlayList()
+        playlist.map(file => {
+            //only save the files that are not saved
+            if (!file.saved && !file._id)
+                ipcRenderer.send('save-playlist', {
+                    ...file,
+                    date: date,
+                    saved: true
+                })
+            file.saved=true
         })
 
 
@@ -120,6 +125,13 @@ class App extends Component {
                         </div>
                         <div className="col-12 col-md-10 col-xl-10 bd-content">
                             <div className="container-fluid">
+
+                                <div className="progress" id="progress-bar" hidden={true}>
+                                    <div className="progress-bar progress-bar-striped progress-bar-animated  "
+                                         role="progressbar" id="processing" style={{"width": "100%"}} min="0"
+                                         max="100"></div>
+                                    asd
+                                </div>
                                 <div className="navbar navbar-expand-lg navbar-light bg-light ">
                                     <button onClick={this.showUploadMediaModal} className="btn btn-success btn-sm"
                                             id="add-media">Add Media
@@ -171,7 +183,6 @@ class App extends Component {
         )
     }
 }
-
 
 
 export default App

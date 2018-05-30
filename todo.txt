@@ -1,36 +1,13 @@
-Dates- selecting a past date displays a playlist of the files played that day and doesnt  display add media button
 
 
-colors to indicate what has been played and what is playing
 
 keyboard short cuts like pause, delete, etc
 
 
-adjust dates when playback is interrupted
 
 
-drag and drop rows
-
-progress bars
 flash messages
 
-
-
-
-duration on table should be human readable
-
-//TODO  allow sorting of future playlists after drag and drop
-
-animation when playing
-
-
-
-
-
-TIMES
-adjusting start times and end times after deletion
-start times creation
-dates etc
 
 
 delete multiple items

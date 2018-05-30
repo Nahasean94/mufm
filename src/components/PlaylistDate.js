@@ -38,7 +38,8 @@ class PlaylistDate extends Component {
 
     validateDate(data) {
         let errors = {}
-        if (validator.isEmpty(data.date)) {
+
+        if (data.date==='') {
             errors.date = 'This field is required'
         }
         return {
@@ -50,6 +51,7 @@ class PlaylistDate extends Component {
     isDateValid() {
         const {errors, isValid} = this.validateDate(this.state)
         if (!isValid) {
+            console.log(errors)
             this.setState({errors})
         }
         return isValid
@@ -204,7 +206,7 @@ class PlaylistDate extends Component {
 
                 // Find the distance between now an the count down date
                 let distance = countDownDate - now
-                console.log(distance)
+
 
                 // Time calculations for days, hours, minutes and seconds
                 let days = Math.floor(distance / (1000 * 60 * 60 * 24))

@@ -23,9 +23,11 @@ class AddMediaFiles extends React.Component {
 
     onDrop(acceptedFiles) {
         if (acceptedFiles.length > 0) {
-            document.getElementById('save-playlist').hidden = false
-            let id = this.props.files.length + 1
+            this.props.onClose()
+            document.getElementById('progress-bar').hidden=false
+            document.getElementById('processing').innerText="Processing metadata. Please wait..."
 
+            let id = this.props.files.length + 1
             for (let i = 0; i < acceptedFiles.length; i++) {
                 this.props.addFile({
                     id: id++,
@@ -110,10 +112,15 @@ class AddMediaFiles extends React.Component {
                         }
                         localStorage.setItem(date, JSON.stringify(dateStore))
                     }
+                    document.getElementById('processing').value=(i/(acceptedFiles.length-1))*100
+                    if(i===acceptedFiles.length-1){
+                        document.getElementById('save-playlist').hidden = false
+                        document.getElementById('progress-bar').hidden=true
+                    }
                 }
             }
         }
-        this.props.onClose()
+
     }
 
     onDropRejected(...args) {

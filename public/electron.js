@@ -41,12 +41,16 @@ app.on('activate', () => {
 ipc.on('save-playlist', (event, arg) => {
     db.insert(arg, function (err, newDoc) {   // Callback is optional
         event.sender.send('saved-file', newDoc)
-
     })
 
 })
 ipc.on('get-playlist', (event, arg) => {
        db.find({date: arg}, function (err, docs) {
         event.sender.send('got-playlist', docs)
+    })
+})
+ipc.on('delete-file', (event, arg) => {
+       db.remove({id: arg}, function (err, docs) {
+        event.sender.send('deleted', docs)
     })
 })

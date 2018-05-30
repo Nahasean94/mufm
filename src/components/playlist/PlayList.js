@@ -5,24 +5,25 @@ import {connect} from 'react-redux'
 import {addFile, deleteFile, clearFiles, updateFile} from "../../actions/playlistActions"
 import PlayListItem from "./PlayListItem"
 import Sortable from "sortablejs"
-import {addTimes,  } from "../../shared/TimeFunctions"
+import {addTimes,} from "../../shared/TimeFunctions"
 import SetPlaylistDate from "../../shared/SetPlaylistDate"
+import Player from '../../shared/Player'
 
 const {ipcRenderer} = window.require('electron')
 
 class PlayList extends React.Component {
     constructor(props) {
         super(props)
-        this.props.files.map(file => this.props.addFile(file))
-
+        // this.props.files.map(file => this.props.addFile(file))
 
 
 //populate the table with the day's playlist
         ipcRenderer.send('get-playlist', new Date().toISOString().split("T")[0])
         ipcRenderer.on('got-playlist', (event, playlist) => {
-            console.log("event listened")
+            this.props.clearFiles()
+            Player.emptyPlayList()
             //check is playlist exists
-            if (playlist.length>0) {
+            if (playlist.length > 0) {
                 let date = SetPlaylistDate.getDate()
                 //if date is not set assume today date
                 if (!date) {
@@ -35,8 +36,13 @@ class PlayList extends React.Component {
                 if (startTime) {
                     this.startTimer()
                 }
-                this.props.clearFiles()
+
+             document.getElementById('progress-bar').hidden=false
+                console.log( document.getElementById('progress-bar'))
+                document.getElementById('processing').innerText = "Processing metadata. Please wait..."
+                let count = 0
                 playlist.map(file => {
+                    console.log(file._id)
                     const duration = file.duration
                     let endTime = ''
                     if (localStorage.getItem(date)) {
@@ -57,9 +63,14 @@ class PlayList extends React.Component {
                         }
                         localStorage.setItem(date, JSON.stringify(dateStore))
                     }
-
+                    // document.getElementById('processing').value = (count / (playlist.length - 1)) * 100
+                    // console.log(count)
+                    if (count++ === playlist.length - 1) {
+                        document.getElementById('progress-bar').hidden = true
+                    }
                 })
             }
+
         })
     }
 
@@ -127,7 +138,7 @@ class PlayList extends React.Component {
         let count = 1
 
         return (
-            <div className="table-wrapper">
+            <div className="table-wrapper" id="table-list">
                 <table className="table table-sm table-hover table-borderless">
                     <thead>
                     <tr>
@@ -141,11 +152,12 @@ class PlayList extends React.Component {
                     </thead>
                     <tbody id="playlist">
                     {this.props.files.map((file, i) => {
-                        return <PlayListItem key={i} name={file.name} duration={file.duration} id={file.id}
+                        console.log(file)
+                                                return <PlayListItem key={i} name={file.name} duration={file.duration} id={file.id}
                                              path={file.path} played={file.played}
                                              isPlaying={file.isPlaying}
                                              startTime={file.startTime ? file.startTime : ''} cover={file.cover}
-                                             count={count++} startPlaying={this.props.startPlaying}/>
+                                             count={count++} startPlaying={this.props.startPlaying} _id={file._id}/>
                     })}
                     </tbody>
                 </table>
