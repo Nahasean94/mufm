@@ -5,7 +5,7 @@ import TextFieldGroup from "../shared/TextFieldsGroup"
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {updateFile, clearFiles, addFile, deleteFile} from "../actions/playlistActions"
-import {tConv12, addTimes, convert_to_24h,} from "../shared/TimeFunctions"
+import {tConv12, addTimes,} from "../shared/TimeFunctions"
 import Player from '../shared/Player'
 import SetPlaylistDate from "../shared/SetPlaylistDate"
 

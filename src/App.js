@@ -53,14 +53,13 @@ class App extends Component {
                 startTime: file.startTime,
             })
         })
-        // console.log(existingPlaylist[playFrom])
         document.getElementById('cover-image').src = existingPlaylist[playFrom].cover
         document.getElementById('cover-image').hidden = false
         document.getElementById('playing_song').innerText = existingPlaylist[playFrom].name
         const audioPlayer = document.getElementById('audio_player')
         audioPlayer.src = existingPlaylist[playFrom].path
         audioPlayer.play()
-        audioPlayer.volume = 0.1
+
         // this.setState({isPlaying: true})
         audioPlayer.addEventListener('ended', () => {
             this.startPlaying(playFrom + 1, ctx)

@@ -14,12 +14,10 @@ const {ipcRenderer} = window.require('electron')
 class PlayList extends React.Component {
     constructor(props) {
         super(props)
-        // this.props.files.map(file => this.props.addFile(file))
 this.state={
 
 }
 
-//populate the table with the day's playlist
         ipcRenderer.send('get-playlist', new Date().toISOString().split("T")[0])
         ipcRenderer.on('got-playlist', (event, playlist) => {
             this.props.clearFiles()
@@ -51,10 +49,6 @@ this.state={
                     if (localStorage.getItem(date)) {
                         endTime = JSON.parse(localStorage.getItem(date)).endTime
                     }
-                    // let startTime = ''
-                    // if (JSON.parse(localStorage.getItem(date))) {
-                    //     startTime = JSON.parse(localStorage.getItem(date)).time
-                    // }
                     file.startTime = endTime ? endTime : startTime ? startTime : ''
                     this.props.addFile(file)
 
@@ -69,8 +63,6 @@ this.state={
                         }
                         localStorage.setItem(date, JSON.stringify(dateStore))
                     }
-                    // document.getElementById('processing').value = (count / (playlist.length - 1)) * 100
-                    // console.log(count)
                     if (count++ === playlist.length - 1) {
                         document.getElementById('progress-bar').hidden = true
                     }

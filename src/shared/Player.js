@@ -49,23 +49,6 @@ class Player {
         })
     }
 
-    startPlaying(playFrom) {
-        const existingPlaylist = this.getPlayList()
-        // for (let i = playFrom; i < existingPlaylist.length; i++) {
-        if (playFrom >= existingPlaylist.length) {
-            playFrom = 0
-        }
-        document.getElementById('playing_song').innerText = existingPlaylist[playFrom].filename
-        const audioPlayer = document.getElementById('audio_player')
-        audioPlayer.src = existingPlaylist[playFrom].path
-        audioPlayer.play()
-        // this.setState({playingFile: this.props.id})
-        audioPlayer.addEventListener('ended', () => {
-            this.startPlaying(playFrom + 1)
-        })
-        // }
-    }
-
     renderAudioPlayer() {
         const audio = new Audio()
         audio.controls = true

@@ -3,13 +3,18 @@ const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 const ipc = require('electron').ipcMain
 const path = require('path')
-
+const mkdirp = require('mkdirp')
+const fs = require('fs')
 const isDev = require('electron-is-dev')
+const uploadDir = `${__dirname}/db.db`
+if (!fs.existsSync(uploadDir))
+    fs.openSync(uploadDir, 'w+')
+// mkdirp.sync(uploadDir)
 
 
 const Datastore = require('nedb')
 db = new Datastore({
-    filename: 'C:\\Users\\nahas\\AppData\\Local\\Programs\\test-react-electron-app\\public\\media\\db.db',
+    filename: uploadDir,
     autoload: true
 })
 
@@ -48,8 +53,8 @@ ipc.on('save-playlist', (event, arg) => {
 
 })
 ipc.on('get-playlist', (event, arg) => {
-     db.find({date: arg}).sort({id: 1}).exec((err,docs)=>{
-    event.sender.send('got-playlist', docs)
+    db.find({date: arg}).sort({id: 1}).exec((err, docs) => {
+        event.sender.send('got-playlist', docs)
     })
 
 })

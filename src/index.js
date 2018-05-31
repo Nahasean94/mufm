@@ -9,7 +9,6 @@ import rootReducer from './rootReducer'
 
 
 const store = createStore(rootReducer, compose(applyMiddleware(thunk)))
-// localStorage.removeItem(new Date().toISOString().split("T")[0])
 
 ReactDOM.render(
     <Provider store={store}>

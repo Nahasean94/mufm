@@ -12,10 +12,7 @@ const {ipcRenderer} = window.require('electron')
 class PlayListItem extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {
-            // ...this.props,
 
-        }
         this.play = this.play.bind(this)
         Player.addToPlayList({
             id: this.props.id,
@@ -44,7 +41,6 @@ class PlayListItem extends React.Component {
         ipcRenderer.on('deleted', (err, arg) => {
         })
         Player.removeSong(this.props.id)
-        // document.getElementById('save-playlist').hidden =
         let date = SetPlaylistDate.getDate()
         let startTime = ''
         if (!date) {

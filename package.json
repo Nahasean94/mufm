@@ -5,13 +5,10 @@
   "main": "public/electron.js",
   "dependencies": {
     "classnames": "^2.2.5",
-    "concurrently": "^3.5.1",
     "electron-is-dev": "^0.3.0",
-    "id3-parser": "^2.0.0",
     "jsmediatags": "^3.8.1",
-    "jsonfile": "^4.0.0",
     "lodash": "^4.17.4",
-    "lowdb": "^1.0.0",
+    "mkdirp": "^0.5.1",
     "nedb": "^1.8.0",
     "prop-types": "^15.6.0",
     "react": "^16.3.2",
@@ -29,8 +26,7 @@
     "redux-thunk": "^2.2.0",
     "shortid": "^2.2.8",
     "sortablejs": "^1.7.0",
-    "validator": "^9.1.2",
-    "wait-on": "^2.1.0"
+    "validator": "^9.1.2"
   },
   "scripts": {
     "start": "react-scripts start",

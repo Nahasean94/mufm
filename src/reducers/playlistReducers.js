@@ -1,5 +1,4 @@
 import {ADD_FILE, CLEAR_FILES, DELETE_FILE, UPDATE_FILE, ADD_DURATION, ADD_IMAGE} from "../actions/types"
-import findIndex from 'lodash/findIndex'
 
 export default (state = [], action) => {
     switch (action.type) {
@@ -30,11 +29,6 @@ export default (state = [], action) => {
                 return file
             })
         case DELETE_FILE:
-            // const index = findIndex(state, {id: action.payload.id})
-            // if (index >= 0) {
-            //     return [...state.slice(0, index), ...state.slice(index + 1)]
-            // }
-            // return state
             return state.filter((file)=>file.id !== action.payload.id);
         default:
             return state
