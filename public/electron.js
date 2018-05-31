@@ -6,9 +6,9 @@ const path = require('path')
 const mkdirp = require('mkdirp')
 const fs = require('fs')
 const isDev = require('electron-is-dev')
-const uploadDir = `${__dirname}/db.db`
-if (!fs.existsSync(uploadDir))
-    fs.openSync(uploadDir, 'w+')
+const uploadDir = `./db.db`
+// if (!fs.existsSync(uploadDir))
+//     fs.openSync(uploadDir, 'w+')
 // mkdirp.sync(uploadDir)
 
 
