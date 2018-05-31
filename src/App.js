@@ -34,7 +34,6 @@ class App extends Component {
 
     //start playing
     startPlaying(playFrom, ctx) {
-
         const existingPlaylist = Player.getPlayList()
         // for (let i = playFrom; i < existingPlaylist.length; i++) {
         if (playFrom >= existingPlaylist.length) {
@@ -44,12 +43,12 @@ class App extends Component {
         ctx.props.files.map(file => {
             ctx.props.updateFile({
                 id: file.id,
-                _id:file._id,
+                _id: file._id,
                 path: file.path,
                 name: file.name,
                 duration: file.duration,
-                isPlaying: existingPlaylist[playFrom ]._id === file._id,
-                played:existingPlaylist[playFrom ]._id === file._id ? true : file.played,
+                isPlaying: existingPlaylist[playFrom]._id === file._id,
+                played: existingPlaylist[playFrom]._id === file._id ? true : file.played,
                 cover: file.cover,
                 startTime: file.startTime,
             })
@@ -61,11 +60,28 @@ class App extends Component {
         const audioPlayer = document.getElementById('audio_player')
         audioPlayer.src = existingPlaylist[playFrom].path
         audioPlayer.play()
-        audioPlayer.volume=0.1
+        audioPlayer.volume = 0.1
         // this.setState({isPlaying: true})
         audioPlayer.addEventListener('ended', () => {
             this.startPlaying(playFrom + 1, ctx)
         })
+        let playing = true
+
+        function doc_keyUp(e) {
+            if (e.keyCode === 32) {
+                if (playing) {
+                    audioPlayer.pause()
+                    playing = false
+                }
+                else {
+                    audioPlayer.play()
+                    playing = true
+                }
+            }
+        }
+
+// register the handler
+        document.addEventListener('keyup', doc_keyUp, false)
         // }
     }
 
@@ -85,7 +101,7 @@ class App extends Component {
                     date: date,
                     saved: true
                 })
-            file.saved=true
+            file.saved = true
         })
 
 
