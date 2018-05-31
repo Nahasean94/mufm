@@ -13,8 +13,12 @@ class Player {
 
     emptyPlayList() {
 
-       this.playlist.length=0
+        this.playlist.length = 0
 
+    }
+
+    getIndex(_id) {
+        return this.playlist.findIndex(file => file._id === _id)
     }
 
     removeSong(id) {
@@ -105,7 +109,6 @@ class Player {
     }
 
 }
-
 
 
 const instance = new Player()

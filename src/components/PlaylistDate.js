@@ -18,7 +18,7 @@ class PlaylistDate extends Component {
             date: '',
             time: '',
             timelineDate: new Date().toDateString(),
-            timelineTime: localStorage.getItem(new Date().toISOString().split("T")[0]) ? localStorage.getItem(new Date().toISOString().split("T")[0]).time ? tConv12(JSON.parse(localStorage.getItem(new Date().toISOString().split("T")[0])).time) : 'not set' : 'not set',
+            timelineTime: '',
             errors: {},
             isLoading: false,
             invalid: false,
@@ -244,7 +244,7 @@ class PlaylistDate extends Component {
                     document.getElementById('playback-time').innerText = ""
                     document.getElementById("clock").innerText = ""
                     clearInterval(stopwatch)
-                    if(Player.getPlayList().length>0){
+                    if (Player.getPlayList().length > 0) {
                         console.log(Player.getPlayList())
                         this.props.startPlaying(0, this)
                     }
@@ -256,7 +256,12 @@ class PlaylistDate extends Component {
 
 
     render() {
-        const {errors, date, time, timelineDate, timelineTime, disableTime} = this.state
+        const {errors, date, time, timelineDate, disableTime} = this.state
+        let dateItem = SetPlaylistDate.getDate()
+        if (!dateItem) {
+            dateItem = new Date().toISOString().split("T")[0]
+        }
+        const timelineTime = localStorage.getItem(dateItem) ?JSON.parse(localStorage.getItem(dateItem)).time ? tConv12(JSON.parse(localStorage.getItem(dateItem)).time) : 'not set' : 'not set'
 
         return (
             <div>

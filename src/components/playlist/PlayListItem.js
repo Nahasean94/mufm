@@ -31,40 +31,41 @@ class PlayListItem extends React.Component {
     }
 
     play(e) {
-        this.props.startPlaying(e.target.id - 1, this)
+        e.preventDefault()
+        this.props.startPlaying(Player.getIndex(e.target.id), this)
     }
 
-    startPlaying(playFrom) {
-        const existingPlaylist = Player.getPlayList()
-
-        if (playFrom >= existingPlaylist.length) {
-            playFrom = 0
-        }
-        this.props.files.map(file => {
-            this.props.updateFile({
-                id: file.id,
-                path: file.path,
-                name: file.name,
-                duration: file.duration,
-                isPlaying: playFrom + 1 === file.id,
-                played: playFrom + 1 === file.id ? true : file.played,
-                cover: file.cover,
-                startTime: file.startTime,
-            })
-        })
-
-        document.getElementById('cover-image').src = existingPlaylist[playFrom].cover
-        document.getElementById('cover-image').hidden = false
-        document.getElementById('playing_song').innerText = existingPlaylist[playFrom].name
-        const audioPlayer = document.getElementById('audio_player')
-        audioPlayer.src = existingPlaylist[playFrom].path
-        audioPlayer.play()
-        this.setState({isPlaying: true})
-        audioPlayer.addEventListener('ended', () => {
-            this.startPlaying(playFrom + 1)
-        })
-
-    }
+    // startPlaying(playFrom) {
+    //     const existingPlaylist = Player.getPlayList()
+    //
+    //     if (playFrom >= existingPlaylist.length) {
+    //         playFrom = 0
+    //     }
+    //     this.props.files.map(file => {
+    //         this.props.updateFile({
+    //             id: file.id,
+    //             path: file.path,
+    //             name: file.name,
+    //             duration: file.duration,
+    //             isPlaying: playFrom + 1 === file.id,
+    //             played: playFrom + 1 === file.id ? true : file.played,
+    //             cover: file.cover,
+    //             startTime: file.startTime,
+    //         })
+    //     })
+    //
+    //     document.getElementById('cover-image').src = existingPlaylist[playFrom].cover
+    //     document.getElementById('cover-image').hidden = false
+    //     document.getElementById('playing_song').innerText = existingPlaylist[playFrom].name
+    //     const audioPlayer = document.getElementById('audio_player')
+    //     audioPlayer.src = existingPlaylist[playFrom].path
+    //     audioPlayer.play()
+    //     this.setState({isPlaying: true})
+    //     audioPlayer.addEventListener('ended', () => {
+    //         this.startPlaying(playFrom + 1)
+    //     })
+    //
+    // }
 
     onDeleteFile(e) {
         e.preventDefault()
@@ -125,16 +126,17 @@ class PlayListItem extends React.Component {
 
 
     render() {
-        const {name, isPlaying, id, duration, played, startTime} = this.props
+        const {name, isPlaying, _id, duration, played, startTime} = this.props
         let {cover} = this.props
         if (!cover) {
             cover = 'media/mp3.png'
         }
+
         return (
-            <tr className={classnames({"table-success": isPlaying}, {"table-secondary": played},)}>
+            <tr className={classnames({"table-success": isPlaying}, {"table-secondary": played},)} >
 
                 <td><img src={cover} width="20" height="20"/></td>
-                <td onDoubleClick={this.play} id={id}>{name}</td>
+                <td id={_id} onDoubleClick={this.play} >{name}</td>
                 <td>{startTime}</td>
                 <td>{duration}</td>
                 <td><i className="fa fa-trash" onClick={this.onDeleteFile}></i></td>

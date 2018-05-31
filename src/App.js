@@ -44,11 +44,12 @@ class App extends Component {
         ctx.props.files.map(file => {
             ctx.props.updateFile({
                 id: file.id,
+                _id:file._id,
                 path: file.path,
                 name: file.name,
                 duration: file.duration,
-                isPlaying: playFrom + 1 === file.id,
-                played: playFrom + 1 === file.id ? true : file.played,
+                isPlaying: existingPlaylist[playFrom ]._id === file._id,
+                played:existingPlaylist[playFrom ]._id === file._id ? true : file.played,
                 cover: file.cover,
                 startTime: file.startTime,
             })
@@ -60,6 +61,7 @@ class App extends Component {
         const audioPlayer = document.getElementById('audio_player')
         audioPlayer.src = existingPlaylist[playFrom].path
         audioPlayer.play()
+        audioPlayer.volume=0.1
         // this.setState({isPlaying: true})
         audioPlayer.addEventListener('ended', () => {
             this.startPlaying(playFrom + 1, ctx)

@@ -15,7 +15,9 @@ class PlayList extends React.Component {
     constructor(props) {
         super(props)
         // this.props.files.map(file => this.props.addFile(file))
+this.state={
 
+}
 
 //populate the table with the day's playlist
         ipcRenderer.send('get-playlist', new Date().toISOString().split("T")[0])
@@ -55,6 +57,7 @@ class PlayList extends React.Component {
                     // }
                     file.startTime = endTime ? endTime : startTime ? startTime : ''
                     this.props.addFile(file)
+
                     if (localStorage.getItem(date)) {
                         let dateStore = JSON.parse(localStorage.getItem(date))
                         if(dateStore.time){
@@ -121,7 +124,6 @@ class PlayList extends React.Component {
                 document.getElementById("clock").innerText = ""
                 clearInterval(stopwatch)
                 if(Player.getPlayList().length>0){
-                    console.log(Player.getPlayList())
                 this.props.startPlaying(0, this)
 
                 }
