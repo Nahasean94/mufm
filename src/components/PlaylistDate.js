@@ -201,7 +201,7 @@ class PlaylistDate extends Component {
             })
 
             const stopwatch = setInterval(() => {
-                const playTime = this.state.time + ":00"
+                const playTime = this.state.startTime + ":00"
 
                 let countDownDate = new Date(`${date} ${playTime}`).getTime()
 

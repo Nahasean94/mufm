@@ -86,7 +86,7 @@ class PlayList extends React.Component {
             let seconds = Math.floor((distance % (1000 * 60)) / 1000)
 
             // // If the count down is finished, write some text
-            if (distance > 0) {
+            if (distance >=1) {
                 document.getElementById('playback-time').innerText = "Playback starts in:"
                 if (days > 0) {
                     document.getElementById("clock").innerText = days + "d " + hours + "h " + minutes + "m " + seconds + "s "
@@ -101,7 +101,8 @@ class PlayList extends React.Component {
                     document.getElementById("clock").innerText = seconds + "s "
                 }
             }
-            else {
+
+            else if(distance===0) {
                 document.getElementById('playback-time').innerText = ""
                 document.getElementById("clock").innerText = ""
                 clearInterval(stopwatch)
