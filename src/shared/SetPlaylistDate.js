@@ -1,7 +1,8 @@
 class SetPlaylistDate {
     //declare date variable
     state = {
-        date: ''
+        date: '',
+        endTime:''
     }
 
     setDate(date) {
@@ -10,6 +11,13 @@ class SetPlaylistDate {
 
     getDate() {
         return this.state.date
+    }
+    setEndTime(time) {
+        this.state.endTime = time
+    }
+
+    getEndTime() {
+        return this.state.endTime
     }
 
 }

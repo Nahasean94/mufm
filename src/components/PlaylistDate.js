@@ -197,13 +197,7 @@ class PlaylistDate extends Component {
                     cover: file.cover
                 })
                 timer = addTimes((timer).split(" ")[0], file.duration)
-                let todayItem = JSON.parse(localStorage.getItem(date))
-                todayItem = {
-                    date: todayItem.date,
-                    time: todayItem.time,
-                    endTime: timer
-                }
-                localStorage.setItem(date, JSON.stringify(todayItem))
+
             })
 
             const stopwatch = setInterval(() => {
@@ -245,7 +239,6 @@ class PlaylistDate extends Component {
                     document.getElementById("clock").innerText = ""
                     clearInterval(stopwatch)
                     if (Player.getPlayList().length > 0) {
-                        console.log(Player.getPlayList())
                         this.props.startPlaying(0, this)
                     }
                 }

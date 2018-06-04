@@ -59,7 +59,7 @@ class App extends Component {
         const audioPlayer = document.getElementById('audio_player')
         audioPlayer.src = existingPlaylist[playFrom].path
         audioPlayer.play()
-
+audioPlayer.volume=0.01
         // this.setState({isPlaying: true})
         audioPlayer.addEventListener('ended', () => {
             this.startPlaying(playFrom + 1, ctx)
@@ -147,7 +147,6 @@ class App extends Component {
                                     <div className="progress-bar progress-bar-striped progress-bar-animated  "
                                          role="progressbar" id="processing" style={{"width": "100%"}} min="0"
                                          max="100"></div>
-                                    asd
                                 </div>
                                 <div className="navbar navbar-expand-lg navbar-light bg-light ">
                                     <button onClick={this.showUploadMediaModal} className="btn btn-success btn-sm"

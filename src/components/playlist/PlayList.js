@@ -14,9 +14,7 @@ const {ipcRenderer} = window.require('electron')
 class PlayList extends React.Component {
     constructor(props) {
         super(props)
-this.state={
-
-}
+        this.state = {}
 
         ipcRenderer.send('get-playlist', new Date().toISOString().split("T")[0])
         ipcRenderer.on('got-playlist', (event, playlist) => {
@@ -43,26 +41,18 @@ this.state={
 
                 document.getElementById('processing').innerText = "Processing metadata. Please wait..."
                 let count = 0
+                let timer = startTime
                 playlist.map(file => {
                     const duration = file.duration
-                    let endTime = ''
-                    if (localStorage.getItem(date)) {
-                        endTime = JSON.parse(localStorage.getItem(date)).endTime
-                    }
-                    file.startTime = endTime ? endTime : startTime ? startTime : ''
-                    this.props.addFile(file)
-
                     if (localStorage.getItem(date)) {
                         let dateStore = JSON.parse(localStorage.getItem(date))
-                        if(dateStore.time){
-                        dateStore = {
-                            date: dateStore.date,
-                            time: dateStore.time,
-                            endTime: endTime ? addTimes(endTime, duration) : startTime ? addTimes(startTime, duration) : ''
+                        if (dateStore.time) {
+                            file.startTime = timer ? timer : ''
+                            timer = addTimes(timer, duration)
+                            SetPlaylistDate.setEndTime(timer)
                         }
-                        }
-                        localStorage.setItem(date, JSON.stringify(dateStore))
                     }
+                    this.props.addFile(file)
                     if (count++ === playlist.length - 1) {
                         document.getElementById('progress-bar').hidden = true
                     }
@@ -115,8 +105,8 @@ this.state={
                 document.getElementById('playback-time').innerText = ""
                 document.getElementById("clock").innerText = ""
                 clearInterval(stopwatch)
-                if(Player.getPlayList().length>0){
-                this.props.startPlaying(0, this)
+                if (Player.getPlayList().length > 0) {
+                    this.props.startPlaying(0, this)
 
                 }
             }

@@ -50,10 +50,10 @@ class PlayListItem extends React.Component {
             const dateItem = JSON.parse(localStorage.getItem(date))
             startTime = dateItem.time ? dateItem.time : ''
         }
-        // let todayDate = new Date().toISOString().split("T")[0]
+
         if (startTime) {
             let timer = startTime
-            this.props.files.map((file, count) => {
+            this.props.files.map((file) => {
                 if (file.id !== this.props.id) {
                     this.props.updateFile({
                         id: file.id,
@@ -67,22 +67,7 @@ class PlayListItem extends React.Component {
                     })
 
                     timer = addTimes((timer).split(" ")[0], file.duration)
-                    let todayItem = JSON.parse(localStorage.getItem(date))
-                    todayItem = {
-                        date: todayItem.date,
-                        time: todayItem.time,
-                        endTime: timer
-                    }
-                    localStorage.setItem(date, JSON.stringify(todayItem))
-                    if (count === this.props.files.length) {
-                        let finalItem = JSON.parse(localStorage.getItem(date))
-                        finalItem = {
-                            date: finalItem.date,
-                            time: finalItem.time,
-                            endTime: timer
-                        }
-                        localStorage.setItem(date, JSON.stringify(finalItem))
-                    }
+
                 }
             })
         }
