@@ -29,17 +29,19 @@ class PlayListItem extends React.Component {
 
     play(e) {
         e.preventDefault()
-        this.props.startPlaying(Player.getIndex(e.target.id), this)
-    }
+        const id = this.props._id
+        this.props.savePlaylist()
+        this.props.startPlaying(Player.getIndex(id), this)
 
+    }
 
 
     onDeleteFile(e) {
         e.preventDefault()
         this.props.deleteFile(this.props.id)
         ipcRenderer.send('delete-file', this.props.id)
-        ipcRenderer.on('deleted', (err, arg) => {
-        })
+        // ipcRenderer.on('deleted', (err, arg) => {
+        // })
         Player.removeSong(this.props.id)
         let date = SetPlaylistDate.getDate()
         let startTime = ''
@@ -82,12 +84,11 @@ class PlayListItem extends React.Component {
         if (!cover) {
             cover = 'media/mp3.png'
         }
-
         return (
-            <tr className={classnames({"table-success": isPlaying}, {"table-secondary": played},)} >
+            <tr className={classnames({"table-success": isPlaying}, {"table-secondary": played},)}>
 
                 <td><img src={cover} width="20" height="20"/></td>
-                <td id={_id} onDoubleClick={this.play} >{name}</td>
+                <td id={_id} onDoubleClick={this.play}>{name}</td>
                 <td>{startTime}</td>
                 <td>{duration}</td>
                 <td><i className="fa fa-trash" onClick={this.onDeleteFile}></i></td>
@@ -104,6 +105,7 @@ PlayListItem.propTypes = {
     count: PropTypes.number.isRequired,
     path: PropTypes.string.isRequired,
     updateFile: PropTypes.func.isRequired,
+    savePlaylist: PropTypes.func.isRequired,
     startPlaying: PropTypes.func.isRequired,
     deleteFile: PropTypes.func.isRequired,
     played: PropTypes.bool.isRequired,

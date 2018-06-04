@@ -196,7 +196,8 @@ class PlaylistDate extends Component {
                     duration: file.duration,
                     played: file.played,
                     startTime: timer,
-                    cover: file.cover
+                    cover: file.cover,
+                    _id:file._id
                 })
                 timer = addTimes((timer).split(" ")[0], file.duration)
 

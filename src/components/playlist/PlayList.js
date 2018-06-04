@@ -60,6 +60,19 @@ class PlayList extends React.Component {
             }
 
         })
+        ipcRenderer.on('saved-file', (event, file) => {
+            this.props.updateFile({
+                id: file.id,
+                path: file.path,
+                name: file.name,
+                duration: file.duration,
+                played: file.played,
+                startTime: file.startTime,
+                cover: file.cover,
+                _id:file._id
+            })
+            Player.addID(file)
+        })
     }
 
     startTimer() {
@@ -148,7 +161,7 @@ class PlayList extends React.Component {
                                              path={file.path} played={file.played}
                                              isPlaying={file.isPlaying}
                                              startTime={file.startTime ? file.startTime : ''} cover={file.cover}
-                                             count={count++} startPlaying={this.props.startPlaying} _id={file._id}/>
+                                             count={count++} startPlaying={this.props.startPlaying} _id={file._id} savePlaylist={this.props.savePlaylist}/>
                     })}
                     </tbody>
                 </table>
@@ -162,6 +175,7 @@ PlayList.propTypes = {
     addFile: PropTypes.func.isRequired,
     deleteFile: PropTypes.func.isRequired,
     startPlaying: PropTypes.func.isRequired,
+    savePlaylist: PropTypes.func.isRequired,
     clearFiles: PropTypes.func.isRequired,
     files: PropTypes.array.isRequired,
     updateFile: PropTypes.func.isRequired,

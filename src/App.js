@@ -40,6 +40,7 @@ class App extends Component {
             playFrom = 0
         }
 
+
         ctx.props.files.map(file => {
             ctx.props.updateFile({
                 id: file.id,
@@ -85,7 +86,7 @@ audioPlayer.volume=0.01
     }
 
     savePlaylist(e) {
-        e.preventDefault()
+        // e.preventDefault()
         let date = SetPlaylistDate.getDate()
         //check if date is set, if it doesnt exist, assume today's date
         if (!date) {
@@ -159,7 +160,7 @@ audioPlayer.volume=0.01
                                 </div>
                                 <hr/>
                                 <div className="row flex-xl-nowrap">
-                                    <PlayList startPlaying={this.startPlaying}/>
+                                    <PlayList startPlaying={this.startPlaying} savePlaylist={this.savePlaylist}/>
                                 </div>
                             </div>
                         </div>

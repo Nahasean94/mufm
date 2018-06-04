@@ -17,6 +17,16 @@ class Player {
 
     }
 
+    addID(song) {
+        this.playlist.forEach(file => {
+            if (file.path === song.path && !file._id) {
+                file._id = song._id
+            }
+
+            return file
+        })
+    }
+
     getIndex(_id) {
         return this.playlist.findIndex(file => file._id === _id)
     }

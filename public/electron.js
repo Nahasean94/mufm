@@ -3,13 +3,9 @@ const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 const ipc = require('electron').ipcMain
 const path = require('path')
-const mkdirp = require('mkdirp')
-const fs = require('fs')
+
 const isDev = require('electron-is-dev')
 const uploadDir = `./db.db`
-// if (!fs.existsSync(uploadDir))
-//     fs.openSync(uploadDir, 'w+')
-// mkdirp.sync(uploadDir)
 
 
 const Datastore = require('nedb')
