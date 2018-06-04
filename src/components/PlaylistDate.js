@@ -158,18 +158,20 @@ class PlaylistDate extends Component {
             let date = SetPlaylistDate.getDate()
             if (!date) {
                 if (!localStorage.getItem(todayDate)) {
+
                     localStorage.setItem(todayDate, JSON.stringify({
                         date: todayDate,
                         time: this.state.time + ":00"
                     }))
                 }
                 else {
+
                     let todayItem = JSON.parse(localStorage.getItem(todayDate))
                     todayItem = {
                         date: todayItem.date,
                         time: this.state.time + ":00"
                     }
-                    localStorage.setItem(this.state.date, JSON.stringify(todayItem))
+                    localStorage.setItem(todayDate, JSON.stringify(todayItem))
                 }
             }
 
