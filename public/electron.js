@@ -19,7 +19,7 @@ let mainWindow
 
 function createWindow() {
     mainWindow = new BrowserWindow({
-        width: 1200, height: 780, resizable: true, webPreferences: {
+        width: 1400, height: 880, resizable: true, webPreferences: {
             webSecurity: false
         }
     })

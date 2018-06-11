@@ -23,7 +23,10 @@ body{
     height: 550px !important;
     width: 100%;
 }
-
+.embedded{
+    overflow: auto;
+    height: 700px !important;
+}
 .navbar {
     position: static;
     /*margin-bottom: 30px;*/

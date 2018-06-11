@@ -164,11 +164,13 @@ class App extends Component {
                                 </div>
                             </div>
                         </div>
-                            <div className="col-3 col-md-3 col-xl-3">
+                            <div className="col-3 col-md-3 col-xl-3 embedded">
 
-                                <a className="twitter-timeline" href="https://twitter.com/NahaseanNjenga" data-widget-id="618046173689937920" data-tweet-limit="3">Tweets by @NahaseanNjenga</a>
-                                <script>{!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs")}</script>
-
+                                        {/*<a className="twitter-timeline" href="https://twitter.com/NahaseanNjenga" data-widget-id="618046173689937920" data-tweet-limit="3">Tweets by @gobala</a>*/}
+                                <a className="twitter-timeline" href="https://twitter.com/moiradio?ref_src=twsrc%5Etfw">Tweets
+                                    by moiradio</a>
+                                <script async src="https://platform.twitter.com/widgets.js" charSet="utf-8"></script>
+                                        <script>{!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs")}</script>
 
                         </div>
                     </div>
