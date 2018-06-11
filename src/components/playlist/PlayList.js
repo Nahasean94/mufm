@@ -1,8 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-
-import {addFile, deleteFile, clearFiles, updateFile} from "../../actions/playlistActions"
+import {addFile, clearFiles, deleteFile, updateFile} from "../../actions/playlistActions"
 import PlayListItem from "./PlayListItem"
 import Sortable from "sortablejs"
 import {addTimes,} from "../../shared/TimeFunctions"
@@ -14,10 +13,15 @@ const {ipcRenderer} = window.require('electron')
 class PlayList extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {}
+        this.state = {
+            files:this.props.files,
+            search:''
+        }
+        this.onChange=this.onChange.bind(this)
 
         ipcRenderer.send('get-playlist', new Date().toISOString().split("T")[0])
         ipcRenderer.on('got-playlist', (event, playlist) => {
+            this.state.files=playlist
             this.props.clearFiles()
             Player.emptyPlayList()
             //check is playlist exists
@@ -61,6 +65,7 @@ class PlayList extends React.Component {
 
         })
         ipcRenderer.on('saved-file', (event, file) => {
+            this.state.files.push(file)
             this.props.updateFile({
                 id: file.id,
                 path: file.path,
@@ -69,7 +74,7 @@ class PlayList extends React.Component {
                 played: file.played,
                 startTime: file.startTime,
                 cover: file.cover,
-                _id:file._id
+                _id: file._id
             })
             Player.addID(file)
         })
@@ -99,7 +104,7 @@ class PlayList extends React.Component {
             let seconds = Math.floor((distance % (1000 * 60)) / 1000)
 
             // // If the count down is finished, write some text
-            if (distance >=1) {
+            if (distance >= 1) {
                 document.getElementById('playback-time').innerText = "Playback starts in:"
                 if (days > 0) {
                     document.getElementById("clock").innerText = days + "d " + hours + "h " + minutes + "m " + seconds + "s "
@@ -115,7 +120,7 @@ class PlayList extends React.Component {
                 }
             }
 
-            else if(distance===0) {
+            else if (distance === 0) {
                 document.getElementById('playback-time').innerText = ""
                 document.getElementById("clock").innerText = ""
                 clearInterval(stopwatch)
@@ -138,12 +143,27 @@ class PlayList extends React.Component {
         })
     }
 
+    onChange(e) {
+            const {files} = this.state
+            this.props.clearFiles()
+            for (let i = 0; i < files.length; i++) {
+                let exp =  new RegExp(e.target.value, 'i')
+                if (String(files[i].name).match(exp)) {
+                    this.props.addFile(files[i])
+                }
+            }
+
+    }
+
 
     render() {
         let count = 1
 
         return (
             <div className="table-wrapper" id="table-list">
+                <div className="form-group">
+                    <input type="text" className="form-control form-control-sm" placeholder="Search" name="search" onChange={this.onChange}/>
+                </div>
                 <table className="table table-sm table-hover table-borderless">
                     <thead>
                     <tr>
@@ -161,7 +181,8 @@ class PlayList extends React.Component {
                                              path={file.path} played={file.played}
                                              isPlaying={file.isPlaying}
                                              startTime={file.startTime ? file.startTime : ''} cover={file.cover}
-                                             count={count++} startPlaying={this.props.startPlaying} _id={file._id} savePlaylist={this.props.savePlaylist}/>
+                                             count={count++} startPlaying={this.props.startPlaying} _id={file._id}
+                                             savePlaylist={this.props.savePlaylist}/>
                     })}
                     </tbody>
                 </table>

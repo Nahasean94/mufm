@@ -60,7 +60,7 @@ class App extends Component {
         const audioPlayer = document.getElementById('audio_player')
         audioPlayer.src = existingPlaylist[playFrom].path
         audioPlayer.play()
-audioPlayer.volume=0.01
+
         // this.setState({isPlaying: true})
         audioPlayer.addEventListener('ended', () => {
             this.startPlaying(playFrom + 1, ctx)
@@ -132,7 +132,7 @@ audioPlayer.volume=0.01
             <div>
                 <div className="container-fluid">
                     <div className="row flex-xl-nowrap">
-                        <div className="col-12 col-md-2 bd-sidebar">
+                        <div className="col-2 col-md-2 bd-sidebar">
                             <PlaylistDate startPlaying={this.startPlaying}/>
                             <div id="timer">
                                 <div><strong id="playback-time"></strong></div>
@@ -141,7 +141,7 @@ audioPlayer.volume=0.01
                                 </div>
                             </div>
                         </div>
-                        <div className="col-12 col-md-10 col-xl-10 bd-content">
+                        <div className="col-7 col-md-7 col-xl-7 bd-content">
                             <div className="container-fluid">
 
                                 <div className="progress" id="progress-bar" hidden={true}>
@@ -163,6 +163,13 @@ audioPlayer.volume=0.01
                                     <PlayList startPlaying={this.startPlaying} savePlaylist={this.savePlaylist}/>
                                 </div>
                             </div>
+                        </div>
+                            <div className="col-3 col-md-3 col-xl-3">
+
+                                <a className="twitter-timeline" href="https://twitter.com/NahaseanNjenga" data-widget-id="618046173689937920" data-tweet-limit="3">Tweets by @NahaseanNjenga</a>
+                                <script>{!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs")}</script>
+
+
                         </div>
                     </div>
                 </div>
